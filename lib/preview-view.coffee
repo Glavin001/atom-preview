@@ -82,19 +82,15 @@ class PreviewView extends ScrollView
     if updateOnTabChange
       currEditor = atom.workspace.getActiveEditor()
       if currEditor?
-        lang = currEditor.getGrammar().name
-        renderer = renderers[lang]
-        # Check if supported
-        if renderer?
-          # Stop watching for events on current Editor
-          @unsubscribe()
-          # Switch to new editor
-          @editor = currEditor
-          @editorId = @editor.id
-          # Start watching editors on new editor
-          @handleEvents()
-          # Trigger update
-          @changeHandler()
+        # Stop watching for events on current Editor
+        @unsubscribe()
+        # Switch to new editor
+        @editor = currEditor
+        @editorId = @editor.id
+        # Start watching editors on new editor
+        @handleEvents()
+        # Trigger update
+        @changeHandler()
 
   handleEvents: () ->
     if @editor?
@@ -123,6 +119,32 @@ class PreviewView extends ScrollView
     @showLoading()
     # Update Title
     @trigger 'title-changed'
+    # Create Callback
+    callback = (error, result) =>
+      outLang = renderer.lang()
+      grammar = atom.syntax.selectGrammar("source.#{outLang}", result)
+      # Get codeBlock
+      codeBlock = @codeBlock.find('pre')
+      if codeBlock.length is 0
+        codeBlock = $('<pre/>')
+        @codeBlock.append(codeBlock)
+      # Reset codeBlock
+      codeBlock.empty()
+      codeBlock.addClass('editor-colors')
+      # Render the JavaScript as HTML with syntax Highlighting
+      htmlEolInvisibles = ''
+      for tokens in grammar.tokenizeLines(result).slice(0, -1)
+        lineText = _.pluck(tokens, 'value').join('')
+        codeBlock.append \
+        EditorView.buildLineHtml {tokens, text: lineText, htmlEolInvisibles}
+      # Clear message display
+      @message.empty()
+      # Display the new rendered HTML
+      @trigger 'preview:html-changed'
+      # Set font-size from Editor to the Preview
+      fontSize = atom.config.get('editor.fontSize')
+      if fontSize?
+        codeBlock.css('font-size', fontSize)
     # Start preview processing
     text = @editor.getText()
     try
@@ -131,37 +153,13 @@ class PreviewView extends ScrollView
       if not text?
         return @showError new Error "Nothing to render."
       if renderer?
-        result = renderer.render text
+        renderer.render text, callback
       else
-        return @showError new Error \
-        "Can not find renderer for grammar #{grammar}."
+        return @showError(new Error \
+        "Can not find renderer for grammar #{grammar}.")
     catch e
       return @showError e
-    outLang = renderer.lang()
 
-    grammar = atom.syntax.selectGrammar("source.#{outLang}", result)
-    # Get codeBlock
-    codeBlock = @codeBlock.find('pre')
-    if codeBlock.length is 0
-      codeBlock = $('<pre/>')
-      @codeBlock.append(codeBlock)
-    # Reset codeBlock
-    codeBlock.empty()
-    codeBlock.addClass('editor-colors')
-    # Render the JavaScript as HTML with syntax Highlighting
-    htmlEolInvisibles = ''
-    for tokens in grammar.tokenizeLines(result).slice(0, -1)
-      lineText = _.pluck(tokens, 'value').join('')
-      codeBlock.append \
-      EditorView.buildLineHtml {tokens, text: lineText, htmlEolInvisibles}
-    # Clear message display
-    @message.empty()
-    # Display the new rendered HTML
-    @trigger 'preview:html-changed'
-    # Set font-size from Editor to the Preview
-    fontSize = atom.config.get('editor.fontSize')
-    if fontSize?
-      codeBlock.css('font-size', fontSize)
 
   syncScroll: ->
     console.log 'Sync scroll'

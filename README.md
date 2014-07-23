@@ -21,7 +21,7 @@ Or Settings/Preferences ➔ Packages ➔ Search for `preview`
 ## Supported Languages
 
 - [x] [CoffeeScript](https://github.com/Glavin001/atom-preview/issues/1)
-- [ ] [LESS](https://github.com/Glavin001/atom-preview/issues/2)
+- [x] [LESS](https://github.com/Glavin001/atom-preview/issues/2)
 - [ ] [SASS](https://github.com/Glavin001/atom-preview/issues/3)
 - [ ] [TypeScript](https://github.com/Glavin001/atom-preview/issues/5)
 - [ ] [Markdown](https://github.com/Glavin001/atom-preview/issues/7)

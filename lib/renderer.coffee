@@ -1,11 +1,24 @@
 module.exports =
   'CoffeeScript':
-    render: (text) ->
+    render: (text, cb) ->
       coffeescript = require 'coffee-script'
-      coffeescript.compile text
+      result = coffeescript.compile text
+      cb null, result
     lang: -> 'js'
   'CoffeeScript (Literate)':
-    render: (text) ->
+    render: (text, cb) ->
       coffeescript = require 'coffee-script'
-      coffeescript.compile text
+      result = coffeescript.compile text
+      cb null, result
     lang: -> 'js'
+  #'TypeScript':
+  #  render: (text) ->
+  #    typescript = require 'typescript'
+  #    # FIXME: Add support for compiling TypeScript
+  #  lang: -> 'js'
+  'LESS':
+    render: (text, cb) ->
+      less = require 'less'
+      less.render text, (e, css) ->
+        cb e, css
+    lang: -> 'css'
