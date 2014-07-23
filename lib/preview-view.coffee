@@ -1,6 +1,7 @@
 path = require 'path'
 {$, $$$, ScrollView, EditorView} = require 'atom'
 _ = require 'underscore-plus'
+renderers = require './renderer'
 
 module.exports =
 class PreviewView extends ScrollView
@@ -11,7 +12,7 @@ class PreviewView extends ScrollView
 
   @content: ->
     @div
-      class: 'atom-preview native-key-bindings'
+      class: 'preview-container native-key-bindings'
       tabindex: -1
       =>
         @div
@@ -31,7 +32,7 @@ class PreviewView extends ScrollView
       @changeHandler()
 
     # Setup debounced renderer
-    atom.config.observe 'atom-preview.refreshDebouncePeriod', \
+    atom.config.observe 'preview.refreshDebouncePeriod', \
     (wait) =>
       # console.log "update debounce to #{wait} ms"
       @debouncedRenderHTMLCode = _.debounce @renderHTMLCode.bind(@), wait
@@ -57,7 +58,7 @@ class PreviewView extends ScrollView
 
       if @editor?
         @trigger 'title-changed' if @editor?
-        @handleEvents(renderer)
+        @handleEvents()
       else
         # The editor this preview was created for has been closed so close
         # this preview since a preview cannot be rendered without an editor
@@ -68,7 +69,7 @@ class PreviewView extends ScrollView
     else
       @subscribe atom.packages.once 'activated', =>
         resolve()
-        @renderHTML(renderer)
+        @renderHTML()
 
   editorForId: (editorId) ->
     for editor in atom.workspace.getEditors()
@@ -77,55 +78,68 @@ class PreviewView extends ScrollView
 
   handleTabChanges: =>
     updateOnTabChange =
-      atom.config.get 'atom-preview.updateOnTabChange'
+      atom.config.get 'preview.updateOnTabChange'
     if updateOnTabChange
       currEditor = atom.workspace.getActiveEditor()
       if currEditor?
         lang = currEditor.getGrammar().name
-        Grammar = require "./langs/#{lang}"
-        renderer = new Grammar()
-        if grammar is "CoffeeScript" or grammar is "CoffeeScript (Literate)"
+        renderer = renderers[lang]
+        # Check if supported
+        if renderer?
           # Stop watching for events on current Editor
           @unsubscribe()
           # Switch to new editor
           @editor = currEditor
           @editorId = @editor.id
           # Start watching editors on new editor
-          @handleEvents(renderer)
+          @handleEvents()
           # Trigger update
-          @changeHandler(renderer)
+          @changeHandler()
 
-  handleEvents: (renderer) ->
+  handleEvents: () ->
     if @editor?
-      @subscribe @editor.getBuffer(), 'contents-modified', @changeHandler(renderer)
+      @subscribe @editor.getBuffer(), \
+      'contents-modified', @changeHandler
       @subscribe @editor, 'path-changed', => @trigger 'title-changed'
 
-  changeHandler: (renderer) =>
-    @renderHTML(renderer)
-    pane = atom.workspace.paneForUri(@getUri())
+  changeHandler: () =>
+    @renderHTML()
+    pane = atom.workspace.paneForUri @getUri()
     if pane? and pane isnt atom.workspace.getActivePane()
-      pane.activateItem(this)
+      pane.activateItem @
 
-  renderHTML: (renderer) ->
+  renderHTML: () ->
     if @editor?
       if @text() is ""
-        @forceRenderHTML(renderer)
+        @forceRenderHTML()
       else
         @debouncedRenderHTMLCode()
 
-  forceRenderHTML: (renderer) ->
+  forceRenderHTML: () ->
     if @editor?
-      @renderHTMLCode(renderer)
+      @renderHTMLCode()
 
-  renderHTMLCode: (renderer) =>
+  renderHTMLCode: () =>
     @showLoading()
     # Update Title
     @trigger 'title-changed'
     # Start preview processing
-    result = renderer.result()
-    lang = renderer.lang()
+    text = @editor.getText()
+    try
+      grammar = @editor.getGrammar().name
+      renderer = renderers[grammar]
+      if not text?
+        return @showError new Error "Nothing to render."
+      if renderer?
+        result = renderer.render text
+      else
+        return @showError new Error \
+        "Can not find renderer for grammar #{grammar}."
+    catch e
+      return @showError e
+    outLang = renderer.lang()
 
-    grammar = atom.syntax.selectGrammar("source.#{lang}", result)
+    grammar = atom.syntax.selectGrammar("source.#{outLang}", result)
     # Get codeBlock
     codeBlock = @codeBlock.find('pre')
     if codeBlock.length is 0
@@ -136,14 +150,14 @@ class PreviewView extends ScrollView
     codeBlock.addClass('editor-colors')
     # Render the JavaScript as HTML with syntax Highlighting
     htmlEolInvisibles = ''
-    for tokens in grammar.tokenizeLines(text).slice(0, -1)
+    for tokens in grammar.tokenizeLines(result).slice(0, -1)
       lineText = _.pluck(tokens, 'value').join('')
       codeBlock.append \
       EditorView.buildLineHtml {tokens, text: lineText, htmlEolInvisibles}
     # Clear message display
     @message.empty()
     # Display the new rendered HTML
-    @trigger 'atom-preview:html-changed'
+    @trigger 'preview:html-changed'
     # Set font-size from Editor to the Preview
     fontSize = atom.config.get('editor.fontSize')
     if fontSize?
@@ -162,10 +176,10 @@ class PreviewView extends ScrollView
     if @editor?
       "#{@editor.getTitle()} preview"
     else
-      "Atom Preview"
+      "Preview"
 
   getUri: ->
-    "atom-preview://editor"
+    "preview://editor"
 
   getPath: ->
     if @editor?
@@ -177,7 +191,7 @@ class PreviewView extends ScrollView
     @codeBlock.empty()
     @message.html $$$ ->
       @div
-        class: 'atom-preview-spinner'
+        class: 'preview-spinner'
         style: 'text-align: center'
         =>
           @span
@@ -198,7 +212,7 @@ class PreviewView extends ScrollView
     @codeBlock.empty()
     @message.html $$$ ->
       @div
-        class: 'atom-preview-spinner'
+        class: 'preview-spinner'
         style: 'text-align: center'
         =>
           @span

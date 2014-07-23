@@ -12,4 +12,4 @@
 ###
 
 # '.workspace':
-#     'ctrl-alt-y': 'coffeescript-preview:toggle'
+#   'ctrl-alt-y': 'preview:toggle'

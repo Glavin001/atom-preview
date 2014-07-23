@@ -17,7 +17,7 @@ module.exports =
   activate: (state) ->
     # console.log 'activate(state)'
     # console.log state
-    atom.workspaceView.command 'atom-preview:toggle', =>
+    atom.workspaceView.command 'preview:toggle', =>
       @toggle()
 
     atom.workspace.registerOpener (uriToOpen) ->
@@ -25,7 +25,7 @@ module.exports =
         {protocol, host, pathname} = url.parse(uriToOpen)
       catch error
         return
-      return unless protocol is 'atom-preview:'
+      return unless protocol is 'preview:'
       try
         pathname = decodeURI(pathname) if pathname
       catch error
@@ -54,7 +54,7 @@ module.exports =
   toggle: ->
     editor = atom.workspace.getActiveEditor()
     return unless editor?
-    uri = "atom-preview://editor"
+    uri = "preview://editor"
     previewPane = atom.workspace.paneForUri(uri)
     if previewPane
       previewPane.destroyItem(previewPane.itemForUri(uri))

@@ -1,3 +1,7 @@
+###
+# For more information: https://atom.io/docs/latest/creating-a-package#context-menu
+###
+
 'context-menu':
   '.workspace':
-    'Toggle Atom Preview': 'atom-preview:toggle'
+    'Toggle Preview': 'preview:toggle'
