@@ -1,3 +1,5 @@
+{allowUnsafeEval, allowUnsafeNewFunction} = require 'loophole'
+
 module.exports =
   'CoffeeScript':
     render: (text, cb) ->
@@ -22,3 +24,13 @@ module.exports =
       less.render text, (e, css) ->
         cb e, css
     lang: -> 'css'
+  'Jade':
+    render: (text, cb) ->
+      jade = require 'jade'
+      options = {
+        pretty: true
+      }
+      fn = allowUnsafeNewFunction -> jade.compile text, options
+      result = fn()
+      cb null, result
+    lang: -> 'html'

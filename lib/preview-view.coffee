@@ -121,6 +121,8 @@ class PreviewView extends ScrollView
     @trigger 'title-changed'
     # Create Callback
     callback = (error, result) =>
+      if error?
+        return @showError error
       outLang = renderer.lang()
       grammar = atom.syntax.selectGrammar("source.#{outLang}", result)
       # Get codeBlock

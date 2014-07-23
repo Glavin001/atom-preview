@@ -25,7 +25,7 @@ Or Settings/Preferences ➔ Packages ➔ Search for `preview`
 - [ ] [SASS](https://github.com/Glavin001/atom-preview/issues/3)
 - [ ] [TypeScript](https://github.com/Glavin001/atom-preview/issues/5)
 - [ ] [Markdown](https://github.com/Glavin001/atom-preview/issues/7)
-- [ ] [Jade](https://github.com/Glavin001/atom-preview/issues/8)
+- [x] [Jade](https://github.com/Glavin001/atom-preview/issues/8)
 - [ ] [Haml](https://github.com/Glavin001/atom-preview/issues/9)
 
 ## Package Settings
