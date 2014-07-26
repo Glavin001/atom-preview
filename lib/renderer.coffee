@@ -10,7 +10,7 @@ module.exports =
   'CoffeeScript (Literate)':
     render: (text, cb) ->
       coffeescript = require 'coffee-script'
-      result = coffeescript.compile text
+      result = coffeescript.compile text, literate: true
       cb null, result
     lang: -> 'js'
   #'TypeScript':
