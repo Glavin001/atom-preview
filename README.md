@@ -23,12 +23,18 @@ Or Settings/Preferences ➔ Packages ➔ Search for `preview`
 ## Supported Languages
 
 - [x] [CoffeeScript](https://github.com/Glavin001/atom-preview/issues/1)
+- [x] [Literate CoffeeScript](https://github.com/Glavin001/atom-preview/pull/18)
 - [x] [LESS](https://github.com/Glavin001/atom-preview/issues/2)
+- [x] [Jade](https://github.com/Glavin001/atom-preview/issues/8)
 - [ ] [SASS](https://github.com/Glavin001/atom-preview/issues/3)
 - [ ] [TypeScript](https://github.com/Glavin001/atom-preview/issues/5)
 - [ ] [Markdown](https://github.com/Glavin001/atom-preview/issues/7)
-- [x] [Jade](https://github.com/Glavin001/atom-preview/issues/8)
 - [ ] [Haml](https://github.com/Glavin001/atom-preview/issues/9)
+- [ ] [Stylus](https://github.com/Glavin001/atom-preview/issues/21)
+- [ ] [ClojureScript](https://github.com/Glavin001/atom-preview/issues/15)
+- [ ] [Dart](https://github.com/Glavin001/atom-preview/issues/14)
+- [ ] [DogeScript](https://github.com/Glavin001/atom-preview/issues/12)
+- [ ] [DSON](https://github.com/Glavin001/atom-preview/issues/13)
 
 ## Package Settings
 
