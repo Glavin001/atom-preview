@@ -40,7 +40,8 @@
     "typescript": "^1.0.1",
     "less": "^1.7.3",
     "jade": "^1.4.2",
-    "loophole": "^1.0.0"
+    "loophole": "^1.0.0",
+    "dogescript": "^2.3.0"
   },
   "devDependencies": {
     "grunt": "~0.4.2",

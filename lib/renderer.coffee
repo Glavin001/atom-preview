@@ -70,7 +70,9 @@ module.exports =
       lang: -> 'html'
     'Dogescript':
       render: (text, cb) ->
-        console.log "DOGESCRIPT"
-        cb new Error "Not yet implemented Dogescript", null
+        dogescript = require "dogescript"
+        beautify = true
+        result = dogescript text, beautify
+        cb null, result
       exts: /.djs/
       lang: -> 'js'
