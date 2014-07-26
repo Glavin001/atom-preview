@@ -2,6 +2,8 @@
 
 > Ultimate previewer of source code in Atom.
 
+[![Gitter chat](https://badges.gitter.im/Glavin001/atom-preview.png)](https://gitter.im/Glavin001/atom-preview)
+
 Atom Package: https://atom.io/packages/preview
 
 ```bash
