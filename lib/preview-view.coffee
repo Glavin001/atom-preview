@@ -151,7 +151,12 @@ class PreviewView extends ScrollView
     text = @editor.getText()
     try
       grammar = @editor.getGrammar().name
-      renderer = renderers[grammar]
+      p = @editor.getPath()
+      # console.log grammar,p
+      extension = path.extname(p)
+      # console.log extension
+      renderer = renderers.findRenderer grammar, extension
+      # console.log renderer
       if not text?
         return @showError new Error "Nothing to render."
       if renderer?
