@@ -47,11 +47,15 @@ module.exports =
         cb null, result
       exts: /.litcoffee/
       lang: -> 'js'
-    #'TypeScript':
-    #  render: (text) ->
-    #    typescript = require 'typescript'
-    #    # FIXME: Add support for compiling TypeScript
-    #  lang: -> 'js'
+    'TypeScript':
+      render: (text, cb) ->
+        console.log "TypeScript"
+        ts = allowUnsafeNewFunction -> allowUnsafeEval -> require 'typestring'
+        console.log "ts", ts
+        result = allowUnsafeEval -> ts.compile(text)
+        cb null, result
+      lang: -> 'js'
+      exts: /.ts/
     'LESS':
       render: (text, cb) ->
         less = require 'less'
