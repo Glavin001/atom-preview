@@ -38,14 +38,14 @@ module.exports =
         coffeescript = require 'coffee-script'
         result = coffeescript.compile text
         cb null, result
-      exts: /.coffee/
+      exts: /^.*\.(coffee)$/
       lang: -> 'js'
     'CoffeeScript (Literate)':
       render: (text, cb) ->
         coffeescript = require 'coffee-script'
         result = coffeescript.compile text, literate: true
         cb null, result
-      exts: /.litcoffee/
+      exts: /^.*\.(litcoffee)$/
       lang: -> 'js'
     'TypeScript':
       render: (text, cb) ->
@@ -55,13 +55,14 @@ module.exports =
         result = allowUnsafeEval -> ts.compile(text)
         cb null, result
       lang: -> 'js'
-      exts: /.ts/
+      exts: /^.*\.(ts)$/
     'LESS':
       render: (text, cb) ->
         less = require 'less'
         less.render text, (e, css) ->
           cb e, css
       lang: -> 'css'
+      exts: /^.*\.(css)$/
     'Jade':
       render: (text, cb) ->
         jade = require 'jade'
@@ -72,11 +73,20 @@ module.exports =
         result = fn()
         cb null, result
       lang: -> 'html'
+      exts: /^.*\.(jade)$/
     'Dogescript':
       render: (text, cb) ->
         dogescript = require "dogescript"
         beautify = true
         result = dogescript text, beautify
         cb null, result
-      exts: /.djs/
+      exts: /^.*\.(djs)$/
       lang: -> 'js'
+    'Stylus':
+      render: (text, cb) ->
+        stylus = require "stylus"
+        # TODO: Set filename, see #23
+        stylus(text).render (err, css) ->
+          cb err, css
+      exts: /^.*\.(styl)$/
+      lang: -> 'css'

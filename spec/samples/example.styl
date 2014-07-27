@@ -1,0 +1,19 @@
+.horizontal
+    li
+        list-style: none outside none
+
+        margin-left: 10px
+        padding-left: $padding
+        &:first-child
+            padding-left: 0
+            margin-left: 0
+
+#menu
+    column(12)
+    ul
+        @extend .horizontal
+        margin: 15px 0px
+        li
+            border-left: 1px solid grey
+            &:first-child
+                border-left: 0

@@ -41,7 +41,8 @@
     "jade": "^1.4.2",
     "loophole": "^1.0.0",
     "dogescript": "^2.3.0",
-    "typestring": "^1.0.0-2"
+    "typestring": "^1.0.0-2",
+    "stylus": "^0.47.3"
   },
   "devDependencies": {
     "grunt": "~0.4.2",
