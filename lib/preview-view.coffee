@@ -2,6 +2,9 @@ path = require 'path'
 {$, $$$, ScrollView, EditorView} = require 'atom'
 _ = require 'underscore-plus'
 renderers = require './renderer'
+analyticsWriteKey = "bp0dj6lufc"
+pkg = require "../package"
+version  = pkg.version
 
 module.exports =
 class PreviewView extends ScrollView
@@ -36,6 +39,20 @@ class PreviewView extends ScrollView
     (wait) =>
       # console.log "update debounce to #{wait} ms"
       @debouncedRenderHTMLCode = _.debounce @renderHTMLCode.bind(@), wait
+
+    # Setup Analytics
+    Analytics = require 'analytics-node'
+    @analytics = new Analytics analyticsWriteKey
+    # set a unique identifier
+    if not atom.config.get 'preview._analyticsUserId'
+      uuid = require 'node-uuid'
+      atom.config.set 'preview._analyticsUserId', uuid.v4()
+    # identify the user
+    atom.config.observe 'preview._analyticsUserId', {}, (userId) =>
+      console.log 'userId :', userId
+      @analytics.identify {
+        userId: userId
+      }
 
   serialize: ->
     deserializer: 'PreviewView'
@@ -158,13 +175,47 @@ class PreviewView extends ScrollView
       renderer = renderers.findRenderer grammar, extension
       # console.log renderer
       if not text?
+        # Track
+        @analytics.track {
+          userId: atom.config.get 'preview._analyticsUserId'
+          event: 'Nothing to render'
+          properties:
+            grammar: grammar,
+            extension: extension,
+            version: version
+        }
         return @showError new Error "Nothing to render."
       if renderer?
-        renderer.render text, callback
+        # Track
+        @analytics.track {
+          userId: atom.config.get 'preview._analyticsUserId'
+          event: 'Preview'
+          properties:
+            grammar: grammar,
+            extension: extension,
+            version: version
+        }
+        return renderer.render text, callback
       else
+        # Track
+        @analytics.track {
+          userId: atom.config.get 'preview._analyticsUserId'
+          event: 'Renderer not found'
+          properties:
+            grammar: grammar,
+            extension: extension,
+            version: version
+        }
         return @showError(new Error \
         "Can not find renderer for grammar #{grammar}.")
     catch e
+      # Track
+      @analytics.track {
+        userId: atom.config.get 'preview._analyticsUserId'
+        event: 'Error'
+        properties:
+          error: e
+      }
       return @showError e
 
 

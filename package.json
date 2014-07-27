@@ -42,7 +42,9 @@
     "loophole": "^1.0.0",
     "dogescript": "^2.3.0",
     "typestring": "^1.0.0-2",
-    "stylus": "^0.47.3"
+    "stylus": "^0.47.3",
+    "analytics-node": "^1.0.2",
+    "node-uuid": "^1.4.1"
   },
   "devDependencies": {
     "grunt": "~0.4.2",
