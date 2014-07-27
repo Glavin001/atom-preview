@@ -34,21 +34,21 @@ module.exports =
       return renderer
   grammars:
     'CoffeeScript':
-      render: (text, cb) ->
+      render: (text, filepath, cb) ->
         coffeescript = require 'coffee-script'
         result = coffeescript.compile text
         cb null, result
       exts: /^.*\.(coffee)$/
       lang: -> 'js'
     'CoffeeScript (Literate)':
-      render: (text, cb) ->
+      render: (text, filepath, cb) ->
         coffeescript = require 'coffee-script'
         result = coffeescript.compile text, literate: true
         cb null, result
       exts: /^.*\.(litcoffee)$/
       lang: -> 'js'
     'TypeScript':
-      render: (text, cb) ->
+      render: (text, filepath, cb) ->
         console.log "TypeScript"
         ts = allowUnsafeNewFunction -> allowUnsafeEval -> require 'typestring'
         console.log "ts", ts
@@ -57,14 +57,14 @@ module.exports =
       lang: -> 'js'
       exts: /^.*\.(ts)$/
     'LESS':
-      render: (text, cb) ->
+      render: (text, filepath, cb) ->
         less = require 'less'
         less.render text, (e, css) ->
           cb e, css
       lang: -> 'css'
       exts: /^.*\.(css)$/
     'Jade':
-      render: (text, cb) ->
+      render: (text, filepath, cb) ->
         jade = require 'jade'
         options = {
           pretty: true
@@ -75,7 +75,7 @@ module.exports =
       lang: -> 'html'
       exts: /^.*\.(jade)$/
     'Dogescript':
-      render: (text, cb) ->
+      render: (text, filepath, cb) ->
         dogescript = require "dogescript"
         beautify = true
         result = dogescript text, beautify
@@ -83,10 +83,12 @@ module.exports =
       exts: /^.*\.(djs)$/
       lang: -> 'js'
     'Stylus':
-      render: (text, cb) ->
+      render: (text, filepath, cb) ->
         stylus = require "stylus"
         # TODO: Set filename, see #23
-        stylus(text).render (err, css) ->
+        stylus(text)
+        .set('filename', filepath)
+        .render (err, css) ->
           cb err, css
       exts: /^.*\.(styl)$/
       lang: -> 'css'

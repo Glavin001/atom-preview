@@ -168,9 +168,9 @@ class PreviewView extends ScrollView
     text = @editor.getText()
     try
       grammar = @editor.getGrammar().name
-      p = @editor.getPath()
-      # console.log grammar,p
-      extension = path.extname(p)
+      filePath = @editor.getPath()
+      # console.log grammar,filePath
+      extension = path.extname(filePath)
       # console.log extension
       renderer = renderers.findRenderer grammar, extension
       # console.log renderer
@@ -201,7 +201,7 @@ class PreviewView extends ScrollView
             label: version
             value: "#{grammar}|#{extension}"
         }
-        return renderer.render text, callback
+        return renderer.render text, filePath, callback
       else
         # Track
         @analytics.track {
