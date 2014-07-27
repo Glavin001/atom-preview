@@ -180,9 +180,12 @@ class PreviewView extends ScrollView
           userId: atom.config.get 'preview._analyticsUserId'
           event: 'Nothing to render'
           properties:
-            grammar: grammar,
-            extension: extension,
+            grammar: grammar
+            extension: extension
             version: version
+            # Google Analytics
+            label: version
+            value: "#{grammar}|#{extension}"
         }
         return @showError new Error "Nothing to render."
       if renderer?
@@ -194,6 +197,9 @@ class PreviewView extends ScrollView
             grammar: grammar,
             extension: extension,
             version: version
+            # Google Analytics
+            label: version
+            value: "#{grammar}|#{extension}"
         }
         return renderer.render text, callback
       else
@@ -205,6 +211,9 @@ class PreviewView extends ScrollView
             grammar: grammar,
             extension: extension,
             version: version
+            # Google Analytics
+            label: version
+            value: "#{grammar}|#{extension}"
         }
         return @showError(new Error \
         "Can not find renderer for grammar #{grammar}.")
@@ -215,6 +224,9 @@ class PreviewView extends ScrollView
         event: 'Error'
         properties:
           error: e
+          # Google Analytics
+          label: version
+          value: "#{grammar}|#{extension}"
       }
       return @showError e
 
