@@ -88,9 +88,7 @@ module.exports =
         try
           console.log text
           d = DSON.parse text
-          console.log d
           result = JSON.stringify d
-          console.log result
           return cb null, result
         catch e
           return cb e, null

@@ -19,6 +19,7 @@ class PreviewView extends ScrollView
       tabindex: -1
       =>
         @div
+          #class: 'editor-contents'
           outlet: 'codeBlock'
         @div
           outlet: 'message'
@@ -49,7 +50,7 @@ class PreviewView extends ScrollView
       atom.config.set 'preview._analyticsUserId', uuid.v4()
     # identify the user
     atom.config.observe 'preview._analyticsUserId', {}, (userId) =>
-      console.log 'userId :', userId
+      # console.log 'userId :', userId
       @analytics.identify {
         userId: userId
       }
@@ -151,7 +152,8 @@ class PreviewView extends ScrollView
         @codeBlock.append(codeBlock)
       # Reset codeBlock
       codeBlock.empty()
-      codeBlock.addClass('editor-colors')
+      codeBlock.addClass('editor-colors') # Apply Theme background color
+      codeBlock.addClass('preview-code-block') # Apply custom Preview styles
       # Render the JavaScript as HTML with syntax Highlighting
       htmlEolInvisibles = ''
       lineTokens = grammar.tokenizeLines(result)
