@@ -64,6 +64,8 @@ class PreviewView extends ScrollView
     atom.workspaceView.off \
     'pane-container:active-pane-item-changed', @handleTabChanges
 
+  getModel: -> null
+
   subscribeToFilePath: (filePath) ->
     @trigger 'title-changed'
     @handleEvents()
