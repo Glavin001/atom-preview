@@ -1,3 +1,4 @@
+path = require 'path'
 {allowUnsafeEval, allowUnsafeNewFunction} = require 'loophole'
 _ = require 'underscore-plus'
 
@@ -59,8 +60,32 @@ module.exports =
     'LESS':
       render: (text, filepath, cb) ->
         less = require 'less'
-        less.render text, (e, css) ->
-          cb e, css
+        # Get Resource Path
+        resourcePath = atom.themes.resourcePath;
+        # Atom UI Variables is under `./static/variables/`
+        atomVariablesPath = path.resolve resourcePath, 'static', 'variables'
+        console.log atomVariablesPath
+        
+        parser = new(less.Parser)({
+          paths: [ # Specify search paths for @import directives
+            '.',
+            atomVariablesPath
+            ],
+          filename: filepath # Specify a filename, for better error messages
+        })
+
+        parser.parse(text, (e, tree) ->
+          console.log e, tree
+          if e?
+            return cb e, null
+          else
+            output = tree.toCSS({
+              # Do Not Minify CSS output
+              compress: false
+            })
+            console.log output
+            cb null, output
+        )
       lang: -> 'css'
       exts: /^.*\.(css)$/
     'Jade':
