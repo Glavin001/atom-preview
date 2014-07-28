@@ -15,7 +15,7 @@ class PreviewView extends ScrollView
 
   @content: ->
     @div
-      class: 'preview-container native-key-bindings'
+      class: 'preview-container native-key-bindings editor editor-colors'
       tabindex: -1
       =>
         @div
