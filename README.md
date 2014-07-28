@@ -29,7 +29,7 @@ Or Settings/Preferences ➔ Packages ➔ Search for `preview`
 - [x] [DogeScript](https://github.com/Glavin001/atom-preview/issues/12)
 - [x] [TypeScript](https://github.com/Glavin001/atom-preview/issues/5)
 - [x] [Stylus](https://github.com/Glavin001/atom-preview/issues/21)
-- [ ] [DSON](https://github.com/Glavin001/atom-preview/issues/13)
+- [x] [DSON](https://github.com/Glavin001/atom-preview/issues/13)
 - [ ] [SASS](https://github.com/Glavin001/atom-preview/issues/3)
 - [ ] [Markdown](https://github.com/Glavin001/atom-preview/issues/7)
 - [ ] [Haml](https://github.com/Glavin001/atom-preview/issues/9)
