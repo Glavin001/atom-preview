@@ -82,6 +82,20 @@ module.exports =
         cb null, result
       exts: /^.*\.(djs)$/
       lang: -> 'js'
+    'DSON':
+      render: (text, filepath, cb) ->
+        DSON = require "dogeon"
+        try
+          console.log text
+          d = DSON.parse text
+          console.log d
+          result = JSON.stringify d
+          console.log result
+          return cb null, result
+        catch e
+          return cb e, null
+      exts: /^.*\.(dson)$/
+      lang: -> 'json'
     'Stylus':
       render: (text, filepath, cb) ->
         stylus = require "stylus"

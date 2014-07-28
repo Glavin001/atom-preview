@@ -152,10 +152,13 @@ class PreviewView extends ScrollView
       codeBlock.addClass('editor-colors')
       # Render the JavaScript as HTML with syntax Highlighting
       htmlEolInvisibles = ''
-      for tokens in grammar.tokenizeLines(result).slice(0, -1)
+      lineTokens = grammar.tokenizeLines(result)
+      #lineTokens = lineTokens.slice(0, -1)
+      # console.log lineTokens
+      for tokens in lineTokens
         lineText = _.pluck(tokens, 'value').join('')
-        codeBlock.append \
-        EditorView.buildLineHtml {tokens, text: lineText, htmlEolInvisibles}
+        b = EditorView.buildLineHtml {tokens, text: lineText, htmlEolInvisibles}
+        codeBlock.append b
       # Clear message display
       @message.empty()
       # Display the new rendered HTML

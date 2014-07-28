@@ -44,7 +44,8 @@
     "typestring": "^1.0.0-2",
     "stylus": "^0.47.3",
     "analytics-node": "^1.0.2",
-    "node-uuid": "^1.4.1"
+    "node-uuid": "^1.4.1",
+    "dogeon": "^1.0.0"
   },
   "devDependencies": {
     "grunt": "~0.4.2",
