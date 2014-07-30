@@ -50,9 +50,7 @@ module.exports =
       lang: -> 'js'
     'TypeScript':
       render: (text, filepath, cb) ->
-        console.log "TypeScript"
         ts = allowUnsafeNewFunction -> allowUnsafeEval -> require 'typestring'
-        console.log "ts", ts
         result = allowUnsafeEval -> ts.compile(text)
         cb null, result
       lang: -> 'js'
@@ -64,8 +62,6 @@ module.exports =
         resourcePath = atom.themes.resourcePath;
         # Atom UI Variables is under `./static/variables/`
         atomVariablesPath = path.resolve resourcePath, 'static', 'variables'
-        console.log atomVariablesPath
-        
         parser = new(less.Parser)({
           paths: [ # Specify search paths for @import directives
             '.',
@@ -73,7 +69,6 @@ module.exports =
             ],
           filename: filepath # Specify a filename, for better error messages
         })
-
         parser.parse(text, (e, tree) ->
           console.log e, tree
           if e?
@@ -83,11 +78,10 @@ module.exports =
               # Do Not Minify CSS output
               compress: false
             })
-            console.log output
             cb null, output
         )
       lang: -> 'css'
-      exts: /^.*\.(css)$/
+      exts: /^.*\.(less)$/
     'Jade':
       render: (text, filepath, cb) ->
         jade = require 'jade'
@@ -122,7 +116,6 @@ module.exports =
     'Stylus':
       render: (text, filepath, cb) ->
         stylus = require "stylus"
-        # TODO: Set filename, see #23
         stylus(text)
         .set('filename', filepath)
         .render (err, css) ->

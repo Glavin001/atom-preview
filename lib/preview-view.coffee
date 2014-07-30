@@ -191,8 +191,7 @@ class PreviewView extends ScrollView
             extension: extension
             version: version
             # Google Analytics
-            label: version
-            value: "#{grammar}|#{extension}"
+            label: "#{grammar}|#{extension}"
         }
         return @showError new Error "Nothing to render."
       if renderer?
@@ -205,8 +204,8 @@ class PreviewView extends ScrollView
             extension: extension,
             version: version
             # Google Analytics
-            label: version
-            value: "#{grammar}|#{extension}"
+            label: "#{grammar}|#{extension}"
+            category: version
         }
         return renderer.render text, filePath, callback
       else
@@ -219,8 +218,8 @@ class PreviewView extends ScrollView
             extension: extension,
             version: version
             # Google Analytics
-            label: version
-            value: "#{grammar}|#{extension}"
+            label: "#{grammar}|#{extension}"
+            category: version
         }
         return @showError(new Error \
         "Can not find renderer for grammar #{grammar}.")
@@ -231,9 +230,10 @@ class PreviewView extends ScrollView
         event: 'Error'
         properties:
           error: e
+          vesion: version
           # Google Analytics
-          label: version
-          value: "#{grammar}|#{extension}"
+          label: "#{grammar}|#{extension}"
+          category: version
       }
       return @showError e
 
