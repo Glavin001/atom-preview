@@ -35,6 +35,10 @@ class PreviewView extends ScrollView
     atom.config.observe 'editor.fontSize', () =>
       @changeHandler()
 
+    # Update on font-family change
+    atom.config.observe 'editor.fontFamily', () =>
+      @changeHandler()
+
     # Setup debounced renderer
     atom.config.observe 'preview.refreshDebouncePeriod', \
     (wait) =>
@@ -171,6 +175,10 @@ class PreviewView extends ScrollView
       fontSize = atom.config.get('editor.fontSize')
       if fontSize?
         codeBlock.css('font-size', fontSize)
+      # Set font-family from Editor to the Preview
+      fontFamily = atom.config.get('editor.fontFamily')
+      if fontFamily?
+        codeBlock.css('font-family', fontFamily)
     # Start preview processing
     text = @editor.getText()
     try
