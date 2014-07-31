@@ -19,10 +19,11 @@ class PreviewView extends ScrollView
       tabindex: -1
       =>
         @div
+          class: 'message'
+          outlet: 'message'
+        @div
           #class: 'editor-contents'
           outlet: 'codeBlock'
-        @div
-          outlet: 'message'
 
   initialize: ->
     super
@@ -269,9 +270,10 @@ class PreviewView extends ScrollView
       @editor.getPath()
 
   showError: (result) ->
+
     failureMessage = result?.message
 
-    @codeBlock.empty()
+    # @codeBlock.empty()
     @message.html $$$ ->
       @div
         class: 'preview-spinner'
@@ -292,7 +294,7 @@ class PreviewView extends ScrollView
 
   showLoading: ->
 
-    @codeBlock.empty()
+    # @codeBlock.empty()
     @message.html $$$ ->
       @div
         class: 'preview-spinner'
