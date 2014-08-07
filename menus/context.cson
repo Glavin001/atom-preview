@@ -3,5 +3,5 @@
 ###
 
 'context-menu':
-  '.workspace':
+  '.workspace .editor:not(.mini)':
     'Toggle Preview': 'preview:toggle'
