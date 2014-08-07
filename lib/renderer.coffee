@@ -130,3 +130,23 @@ module.exports =
         cb null, result
       exts: /^.*\.(jsx)$/
       lang: -> 'js'
+    'EmberScript':
+      render: (text, filepath, cb) ->
+        em = require 'ember-script'
+        options = {
+          bare: no
+          raw: no
+          sourceMap: no
+        }
+        csAst = em.parse text,
+          bare: options.bare
+          raw: options.raw or options.sourceMap
+        # console.log csAst
+        jsAst = em.compile csAst,
+          bare: options.bare
+        # console.log jsAst
+        jsContent = em.js jsAst
+        # console.log jsContent
+        cb null, jsContent
+      exts: /^.*\.(em)$/
+      lang: -> 'js'

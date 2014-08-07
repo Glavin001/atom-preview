@@ -30,6 +30,8 @@ Or Settings/Preferences ➔ Packages ➔ Search for `preview`
 - [x] [TypeScript](https://github.com/Glavin001/atom-preview/issues/5)
 - [x] [Stylus](https://github.com/Glavin001/atom-preview/issues/21)
 - [x] [DSON](https://github.com/Glavin001/atom-preview/issues/13)
+- [x] [React (JSX)](https://github.com/Glavin001/atom-preview/issues/41)
+- [x] [EmberScript](https://github.com/Glavin001/atom-preview/issues/39)
 - [ ] [SASS](https://github.com/Glavin001/atom-preview/issues/3)
 - [ ] [Markdown](https://github.com/Glavin001/atom-preview/issues/7)
 - [ ] [Haml](https://github.com/Glavin001/atom-preview/issues/9)
