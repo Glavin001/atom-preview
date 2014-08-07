@@ -7,6 +7,7 @@ module.exports =
     refreshDebouncePeriod: 100
 
   previewView: null
+  uri: "preview://editor"
 
   ###
   # This required method is called when your package is activated. It is passed
@@ -15,8 +16,8 @@ module.exports =
   # your package is started (like setting up DOM elements or binding events).
   ###
   activate: (state) ->
-    # console.log 'activate(state)'
-    # console.log state
+    console.log 'activate(state)'
+    console.log state
     atom.workspaceView.command 'preview:toggle', =>
       @toggle()
 
@@ -33,6 +34,9 @@ module.exports =
       # Create and show preview!
       new PreviewView()
 
+    # Deserialize state
+    @toggle if state.isOpen
+
   ###
   # This optional method is called when the window is shutting down, allowing
   # you to return JSON to represent the state of your component. When the
@@ -41,6 +45,10 @@ module.exports =
   ###
   serialize: ->
     console.log 'serialize()'
+    previewPane = atom.workspace.paneForUri(@uri)
+    return {
+      isOpen: previewPane?
+    }
 
   ###
   # This optional method is called when the window is shutting down. If your
@@ -50,17 +58,20 @@ module.exports =
   ###
   deactivate: ->
     console.log 'deactivate()'
+    previewPane = atom.workspace.paneForUri(@uri)
+    if previewPane
+      previewPane.destroyItem(previewPane.itemForUri(@uri))
+      return
 
   toggle: ->
     editor = atom.workspace.getActiveEditor()
     return unless editor?
-    uri = "preview://editor"
-    previewPane = atom.workspace.paneForUri(uri)
+    previewPane = atom.workspace.paneForUri(@uri)
     if previewPane
-      previewPane.destroyItem(previewPane.itemForUri(uri))
+      previewPane.destroyItem(previewPane.itemForUri(@uri))
       return
     previousActivePane = atom.workspace.getActivePane()
-    atom.workspace.open(uri, split: 'right', searchAllPanes: true)
+    atom.workspace.open(@uri, split: 'right', searchAllPanes: true)
     .done (previewView) ->
       if previewView instanceof PreviewView
         previewView.renderHTML()
