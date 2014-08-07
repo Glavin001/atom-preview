@@ -19,7 +19,7 @@ class PreviewView extends ScrollView
       tabindex: -1
       =>
         @div
-          class: 'message'
+          class: 'message tool-panel text-center'
           outlet: 'message'
         @div
           #class: 'editor-contents'
