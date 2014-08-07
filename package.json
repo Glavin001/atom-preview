@@ -45,7 +45,8 @@
     "stylus": "^0.47.3",
     "analytics-node": "^1.0.2",
     "node-uuid": "^1.4.1",
-    "dogeon": "^1.0.0"
+    "dogeon": "^1.0.0",
+    "react-tools": "^0.11.1"
   },
   "devDependencies": {
     "grunt": "~0.4.2",

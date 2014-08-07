@@ -122,3 +122,11 @@ module.exports =
           cb err, css
       exts: /^.*\.(styl)$/
       lang: -> 'css'
+    'JavaScript (JSX)':
+      render: (text, filepath, cb) ->
+        reactTools = require 'react-tools'
+        options = {}
+        result = reactTools.transform text, options
+        cb null, result
+      exts: /^.*\.(jsx)$/
+      lang: -> 'js'
