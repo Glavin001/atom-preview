@@ -18,6 +18,11 @@ module.exports =
   activate: (state) ->
     console.log 'activate(state)'
     console.log state
+
+    # FIXME: This is a temporary flag for exporting ReactEditorView
+    # See https://github.com/atom/atom/commit/fb4361e976ba46fe7a803f0cdf988f352bf4d3e2
+    atom.config.set('core.useReactMiniEditors', true);
+
     atom.workspaceView.command 'preview:toggle', =>
       @toggle()
 
@@ -74,5 +79,5 @@ module.exports =
     atom.workspace.open(@uri, split: 'right', searchAllPanes: true)
     .done (previewView) ->
       if previewView instanceof PreviewView
-        previewView.renderHTML()
+        previewView.renderPreview()
         previousActivePane.activate()
