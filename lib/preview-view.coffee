@@ -1,7 +1,7 @@
 {$, $$$, EditorView} = require 'atom'
 path = require 'path'
 _ = require 'underscore-plus'
-TextBuffer = require "text-buffer"
+TextBuffer = atom.deserializers.deserializers.TextBuffer
 Editor = atom.deserializers.deserializers.Editor
 renderers = require './renderer'
 analyticsWriteKey = "bp0dj6lufc"

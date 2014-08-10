@@ -1,67 +1,65 @@
 {
-    "name": "preview",
-    "main": "lib/preview",
-    "version": "0.8.1",
-    "description": "Ultimate previewer of source code in Atom.",
-    "license": "MIT",
-    "private": true,
-    "author": {
-        "name": "Glavin Wiechert",
-        "email": "glavin.wiechert@gmail.com",
-        "url": "https://github.com/Glavin001"
-    },
-    "contributors": [{
-        "name": "ddavison",
-        "email": "sircapsalot@gmail.com",
-        "url": "https://github.com/ddavison"
-    }],
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/Glavin001/atom-preview.git"
-    },
-    "homepage": "https://github.com/Glavin001/atom-preview",
-    "bugs": {
-        "url": "https://github.com/Glavin001/atom-preview/issues"
-    },
-    "engines": {
-        "atom": ">0.50.0"
-    },
-    "scripts": {
-        "test": "grunt"
-    },
-    "activationEvents": [
-        "preview:toggle"
-    ],
-    "dependencies": {
-        "text-buffer": "^3.0.0",
-        "delegato": "^1",
-        "mixto": "^1",
-        "grim": "0.11.0",
-        "underscore-plus": "^1.5.0",
-        "coffee-script": "^1.7.1",
-        "less": "^1.7.3",
-        "jade": "^1.4.2",
-        "loophole": "^1.0.0",
-        "dogescript": "^2.3.0",
-        "typestring": "^1.0.0-2",
-        "stylus": "^0.47.3",
-        "analytics-node": "^1.0.2",
-        "node-uuid": "^1.4.1",
-        "dogeon": "^1.0.0",
-        "react-tools": "^0.11.1",
-        "ember-script": "0.0.14"
-    },
-    "devDependencies": {
-        "grunt": "~0.4.2",
-        "grunt-coffeelint": "0.0.8",
-        "grunt-contrib-watch": "~0.5.3",
-        "grunt-lesslint": "~1.0.0",
-        "grunt-apm": "0.0.1"
-    },
-    "keywords": [
-        "preview",
-        "coffeescript",
-        "less",
-        "jade"
-    ]
+  "name": "preview",
+  "main": "lib/preview",
+  "version": "0.8.1",
+  "description": "Ultimate previewer of source code in Atom.",
+  "license": "MIT",
+  "private": true,
+  "author": {
+    "name": "Glavin Wiechert",
+    "email": "glavin.wiechert@gmail.com",
+    "url": "https://github.com/Glavin001"
+  },
+  "contributors": [
+    {
+      "name": "ddavison",
+      "email": "sircapsalot@gmail.com",
+      "url": "https://github.com/ddavison"
+    }
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Glavin001/atom-preview.git"
+  },
+  "homepage": "https://github.com/Glavin001/atom-preview",
+  "bugs": {
+    "url": "https://github.com/Glavin001/atom-preview/issues"
+  },
+  "engines": {
+    "atom": ">0.50.0"
+  },
+  "scripts": {
+    "test": "grunt"
+  },
+  "activationEvents": [
+    "preview:toggle"
+  ],
+  "dependencies": {
+    "underscore-plus": "^1.5.0",
+    "coffee-script": "^1.7.1",
+    "less": "^1.7.3",
+    "jade": "^1.4.2",
+    "loophole": "^1.0.0",
+    "dogescript": "^2.3.0",
+    "typestring": "^1.0.0-2",
+    "stylus": "^0.47.3",
+    "analytics-node": "^1.0.2",
+    "node-uuid": "^1.4.1",
+    "dogeon": "^1.0.0",
+    "react-tools": "^0.11.1",
+    "ember-script": "0.0.14"
+  },
+  "devDependencies": {
+    "grunt": "~0.4.2",
+    "grunt-coffeelint": "0.0.8",
+    "grunt-contrib-watch": "~0.5.3",
+    "grunt-lesslint": "~1.0.0",
+    "grunt-apm": "0.0.1"
+  },
+  "keywords": [
+    "preview",
+    "coffeescript",
+    "less",
+    "jade"
+  ]
 }
