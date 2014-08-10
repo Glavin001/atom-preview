@@ -1,12 +1,14 @@
 {$, $$$, EditorView} = require 'atom'
 path = require 'path'
 _ = require 'underscore-plus'
-TextBuffer = atom.deserializers.deserializers.TextBuffer
-Editor = atom.deserializers.deserializers.Editor
 renderers = require './renderer'
+PreviewMessageView = require './preview-message-view.coffee'
 analyticsWriteKey = "bp0dj6lufc"
 pkg = require "../package"
 version  = pkg.version
+# FIXME: TextBuffer and Editor should be exposed from Atom
+TextBuffer = atom.deserializers.deserializers.TextBuffer
+Editor = atom.deserializers.deserializers.Editor
 
 module.exports =
 class PreviewView extends EditorView
@@ -21,8 +23,14 @@ class PreviewView extends EditorView
     editor = new Editor(buffer: buffer)
     # Initialize the EditorView
     super(editor)
+    # Add classes
+    @addClass('preview-container')
     # Empty to start
     editor.setText ''
+
+    # Attach the MessageView
+    @messageView = new PreviewMessageView()
+    @showLoading()
 
     # Setup Observers
     # Update on Tab Change
@@ -31,7 +39,7 @@ class PreviewView extends EditorView
     # Setup debounced renderer
     atom.config.observe 'preview.refreshDebouncePeriod', \
     (wait) =>
-      console.log "update debounce to #{wait} ms"
+      # console.log "update debounce to #{wait} ms"
       @debouncedRenderPreview = _.debounce @renderPreview.bind(@), wait
 
     # Setup Analytics
@@ -52,6 +60,7 @@ class PreviewView extends EditorView
     @renderPreview()
 
   destroy: ->
+    @messageView.detach()
     @unsubscribe()
     atom.workspaceView.off \
     'pane-container:active-pane-item-changed', @handleTabChanges
@@ -118,6 +127,7 @@ class PreviewView extends EditorView
         editor.setGrammar grammar
         editor.setText result
         @redraw()
+        @hideMessage()
       # Start preview processing
       try
         grammar = cEditor.getGrammar().name
@@ -182,5 +192,46 @@ class PreviewView extends EditorView
             category: version
         }
         return @showError e
-  showLoading: () ->
-  showError: () ->
+
+  showError: (result) ->
+    failureMessage = result?.message
+    @showMessage()
+    @messageView.message.html $$$ ->
+      @div
+        class: 'preview-spinner'
+        style: 'text-align: center'
+        =>
+          @span
+            class: 'loading loading-spinner-large inline-block'
+          @div
+            class: 'text-highlight',
+            'Previewing Failed\u2026'
+            =>
+              @div
+                class: 'text-error'
+                failureMessage if failureMessage?
+          @div
+            class: 'text-warning'
+            result?.stack
+
+  showLoading: ->
+    @showMessage()
+    @messageView.message.html $$$ ->
+      @div
+        class: 'preview-spinner'
+        style: 'text-align: center'
+        =>
+          @span
+            class: 'loading loading-spinner-large inline-block'
+          @div
+            class: 'text-highlight',
+            'Loading Preview\u2026'
+
+  showMessage: ->
+    if not @messageView.hasParent()
+      editorContents = $('.editor-contents', @element)
+      editorContents.append @messageView
+
+  hideMessage: ->
+    if @messageView.hasParent()
+      @messageView.detach()
