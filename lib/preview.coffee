@@ -16,8 +16,8 @@ module.exports =
   # your package is started (like setting up DOM elements or binding events).
   ###
   activate: (state) ->
-    console.log 'activate(state)'
-    console.log state
+    # console.log 'activate(state)'
+    # console.log state
 
     # FIXME: This is a temporary flag for exporting ReactEditorView
     # See https://github.com/atom/atom/commit/fb4361e976ba46fe7a803f0cdf988f352bf4d3e2

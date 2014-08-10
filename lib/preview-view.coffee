@@ -17,10 +17,8 @@ class PreviewView extends EditorView
   constructor: () ->
     # Create TextBuffer
     buffer = new TextBuffer
-    console.log buffer
     # Create Editor
     editor = new Editor(buffer: buffer)
-    console.log editor
     # Initialize the EditorView
     super(editor)
     # Empty to start
@@ -72,14 +70,12 @@ class PreviewView extends EditorView
     "preview://editor"
 
   changeHandler: () =>
-    console.log 'changeHandler'
-    @renderPreview()
+    @debouncedRenderPreview()
     # pane = atom.workspace.paneForUri @getUri()
     # if pane? and pane isnt atom.workspace.getActivePane()
     #   pane.activateItem @
 
   handleEvents: () ->
-    console.log 'handleEvents'
     currEditor = atom.workspace.getActiveEditor()
     if currEditor?
       @subscribe currEditor.getBuffer(), \
@@ -87,7 +83,6 @@ class PreviewView extends EditorView
       @subscribe currEditor, 'path-changed', => @trigger 'title-changed'
 
   handleTabChanges: =>
-    console.log 'handleTabChanges'
     updateOnTabChange =
       atom.config.get 'preview.updateOnTabChange'
     if updateOnTabChange
@@ -101,7 +96,6 @@ class PreviewView extends EditorView
         @changeHandler()
 
   renderPreview: () ->
-    console.log 'renderPreview'
     # Update Title
     @trigger 'title-changed'
     # Start preview processing
@@ -110,8 +104,8 @@ class PreviewView extends EditorView
     if cEditor? and cEditor isnt editor
       # Source Code text
       text = cEditor.getText()
-      console.log(text)
-      console.log(cEditor is editor, cEditor, editor)
+      # console.log(text)
+      # console.log(cEditor is editor, cEditor, editor)
       @showLoading()
       # Update Title
       @trigger 'title-changed'
@@ -124,7 +118,6 @@ class PreviewView extends EditorView
         editor.setGrammar grammar
         editor.setText result
         @redraw()
-        console.log 'DONE!'
       # Start preview processing
       try
         grammar = cEditor.getGrammar().name

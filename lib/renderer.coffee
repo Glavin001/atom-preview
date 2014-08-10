@@ -70,7 +70,7 @@ module.exports =
           filename: filepath # Specify a filename, for better error messages
         })
         parser.parse(text, (e, tree) ->
-          console.log e, tree
+          # console.log e, tree
           if e?
             return cb e, null
           else
@@ -105,7 +105,6 @@ module.exports =
       render: (text, filepath, cb) ->
         DSON = require "dogeon"
         try
-          console.log text
           d = DSON.parse text
           result = JSON.stringify d
           return cb null, result
