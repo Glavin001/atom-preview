@@ -1,4 +1,4 @@
-{$, $$$, EditorView} = require 'atom'
+{$, $$$} = require 'atom'
 path = require 'path'
 _ = require 'underscore-plus'
 renderers = require './renderer'
@@ -6,12 +6,15 @@ PreviewMessageView = require './preview-message-view.coffee'
 analyticsWriteKey = "bp0dj6lufc"
 pkg = require "../package"
 version  = pkg.version
-# FIXME: TextBuffer and Editor should be exposed from Atom
-TextBuffer = atom.deserializers.deserializers.TextBuffer
-Editor = atom.deserializers.deserializers.Editor
+# Get Atom internal modules
+resourcePath = atom.config.resourcePath
+# EditorView = require path.resolve resourcePath, 'src', 'editor-view'
+ReactEditorView = require path.resolve resourcePath, 'src', 'react-editor-view'
+TextBuffer = require path.resolve resourcePath, 'node_modules', 'text-buffer'
+Editor = require path.resolve resourcePath, 'src', 'editor'
 
 module.exports =
-class PreviewView extends EditorView
+class PreviewView extends ReactEditorView
   @content: (params) ->
     params = params ? params || {}
     super(params)
