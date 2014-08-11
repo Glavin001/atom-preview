@@ -16,8 +16,9 @@ module.exports =
   # your package is started (like setting up DOM elements or binding events).
   ###
   activate: (state) ->
-    console.log 'activate(state)'
-    console.log state
+    # console.log 'activate(state)'
+    # console.log state
+    
     atom.workspaceView.command 'preview:toggle', =>
       @toggle()
 
@@ -74,5 +75,5 @@ module.exports =
     atom.workspace.open(@uri, split: 'right', searchAllPanes: true)
     .done (previewView) ->
       if previewView instanceof PreviewView
-        previewView.renderHTML()
+        previewView.renderPreview()
         previousActivePane.activate()
