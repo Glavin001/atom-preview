@@ -19,6 +19,8 @@ Or Settings/Preferences ➔ Packages ➔ Search for `preview`
 - [x] Shows loading and error messages
 - [x] [Updates on Tab Change](https://github.com/Glavin001/atom-coffeescript-preview/issues/3)
 - [x] [Highlights using active Atom theme](https://github.com/Glavin001/atom-coffeescript-preview/issues/5)
+- [x] [Users can manually change the default preview renderer](https://github.com/Glavin001/atom-preview/issues/22)
+- [x] [SpacePen Views can live preview!](https://github.com/Glavin001/atom-preview/issues/47)
 
 ## Supported Languages
 

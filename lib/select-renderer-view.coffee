@@ -14,14 +14,15 @@ class SelectRendererView extends SelectListView
     "<li>#{item}</li>"
 
   confirmed: (item) ->
-    console.log("#{item} was selected")
+    # console.log("#{item} was selected")
     @previewView.renderPreviewWithRenderer item
     # Close
     @detach()
 
   attach: =>
-    @previewView.editorContents.append @
-    @previewView.hideMessage()
+    # @previewView.editorContents.append @
+    # @previewView.hideMessage()
+    atom.workspaceView.appendToTop @
   toggle: =>
     if @hasParent()
       @detach()

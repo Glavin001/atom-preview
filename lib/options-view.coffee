@@ -19,7 +19,6 @@ class OptionsView extends View
               @div
                 class: "panel-body padded"
                 =>
-                  @div "HAWT BODYYYY"
                   @button
                     class: 'btn btn-primary inline-block-tight'
                     click: 'selectRenderer'

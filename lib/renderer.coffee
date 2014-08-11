@@ -8,13 +8,16 @@ _ = require 'underscore-plus'
 rCache = {}
 
 module.exports =
-  findByGrammar: (grammar) ->
-    @grammars[grammar]
-  findAllByExtention: (extension) ->
+  allRenderers: ->
     gs = []
     # Map each renderer into an array
     for r of @grammars
       gs.push(@grammars[r])
+    return gs
+  findByGrammar: (grammar) ->
+    @grammars[grammar]
+  findAllByExtention: (extension) ->
+    gs = @allRenderers()
     # Filter renderers
     _.filter(gs, (renderer) ->
       exts = renderer.exts
@@ -157,44 +160,24 @@ module.exports =
     'SpacePen':
       render: (text, filepath, cb) ->
         try
-          console.log "File Path:", filepath
-          extension = path.extname(filepath)
-          temp.open {suffix: extension}, (err, info) ->
+          # Get a filename in the current directory that is unique
+          generateFilepath = (filepath, cb) ->
+            extension = path.extname(filepath)
+            cd = path.dirname(filepath)
+            newFilename = "preview-temp-file-#{+new Date()}#{extension}"
+            newFilepath = path.resolve cd, newFilename
+            return cb(null, newFilepath)
+          generateFilepath(filepath, (err, fp) ->
+            # console.log fp
             if err?
               return cb(err, null)
-            fs.write info.fd, text or "", (err) ->
+            # Write to file
+            fs.writeFile fp, text or "", (err) ->
               if err?
                 return cb(err, null)
-              fs.close info.fd, (err) ->
-                if err?
-                  return cb(err, null)
-                # Get the View class module
-                console.log info.path
-                # Patch the NODE_PATH
-                cd = path.dirname(filepath)
-                nodePath = process.env.NODE_PATH
-                deli = ":"
-                newNodePath = "#{nodePath}#{deli}#{cd}"
-                console.log newNodePath
-                process.env.NODE_PATH = newNodePath
-                module.paths.push cd
-                console.log module.paths
-                mFilename = module.filename
-                module.filename = cd
-                require('module').Module._initPaths();
-                View = null
-                try
-                  View = require(info.path) # Get the View module
-                catch e
-                  # Revert NODE_PATH
-                  process.env.NODE_PATH = nodePath
-                  module.filename = mFilename
-                  require('module').Module._initPaths();
-                  return cb(e, null)
-                # Revert NODE_PATH
-                process.env.NODE_PATH = nodePath
-                module.filename = mFilename
-                require('module').Module._initPaths();
+              # Get the View class module
+              try
+                View = require(fp) # Get the View module
                 view = new View() # Create new View
                 # Check if it is an instance of a Space-pen View
                 if view instanceof $
@@ -202,6 +185,16 @@ module.exports =
                   cb(null, view)
                 else
                   cb(new Error("Is not a SpacePen View"), null)
+                # Delete file
+                fs.unlink fp
+                return
+              catch e
+                # return error
+                cb(e, null)
+                # Delete file
+                fs.unlink fp
+                return
+            )
         catch e
           return cb(e, null)
       exts: /^.*\.(coffee|js)$/
