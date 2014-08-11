@@ -155,12 +155,13 @@ class PreviewView extends ReactEditorView
         @hideMessage()
         # Force focus on the editor
         focusOnEditor = =>
-          if @lastEditor?
-            # console.log "Focus on last editor!", @lastEditor
-            uri = @lastEditor.getUri()
-            if pane = atom.workspace.paneForUri(uri)
-              # console.log pane
-              pane.activate()
+          return
+          # if @lastEditor?
+          #   # console.log "Focus on last editor!", @lastEditor
+          #   uri = @lastEditor.getUri()
+          #   if pane = atom.workspace.paneForUri(uri)
+          #     # console.log pane
+          #     pane.activate()
 
         if error?
           focusOnEditor()
