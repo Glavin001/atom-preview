@@ -103,6 +103,9 @@ class PreviewView extends ReactEditorView
   getUri: ->
     "preview://editor"
 
+  focus: ->
+    false
+
   changeHandler: () =>
     @debouncedRenderPreview()
 
