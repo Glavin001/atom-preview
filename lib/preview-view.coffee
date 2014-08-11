@@ -105,9 +105,6 @@ class PreviewView extends ReactEditorView
 
   changeHandler: () =>
     @debouncedRenderPreview()
-    # pane = atom.workspace.paneForUri @getUri()
-    # if pane? and pane isnt atom.workspace.getActivePane()
-    #   pane.activateItem @
 
   handleEvents: () ->
     currEditor = atom.workspace.getActiveEditor()
@@ -156,7 +153,17 @@ class PreviewView extends ReactEditorView
       # Create Callback
       callback = (error, result) =>
         @hideMessage()
+        # Force focus on the editor
+        focusOnEditor = =>
+          if @lastEditor?
+            # console.log "Focus on last editor!", @lastEditor
+            uri = @lastEditor.getUri()
+            if pane = atom.workspace.paneForUri(uri)
+              # console.log pane
+              pane.activate()
+
         if error?
+          focusOnEditor()
           return @showError error
         # Check if result is a string and therefore source code
         if typeof result is "string"
@@ -166,13 +173,17 @@ class PreviewView extends ReactEditorView
           editor.setText result
           @redraw()
           @hideViewPreview()
+          focusOnEditor()
         # Check if result is a Space-pen View (jQuery)
         else if result instanceof $
           # Is SpacePen View
           @renderViewForPreview(result)
+          focusOnEditor()
+
         else
           # Unknown result type
           @hideViewPreview() # Show Editor by default
+          focusOnEditor()
           return @showError new Error("Unsupported result type.")
 
       # Start preview processing
