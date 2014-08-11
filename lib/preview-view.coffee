@@ -1,8 +1,10 @@
-{$, $$$} = require 'atom'
+{$, $$, $$$} = require 'atom'
 path = require 'path'
 _ = require 'underscore-plus'
 renderers = require './renderer'
-PreviewMessageView = require './preview-message-view.coffee'
+PreviewMessageView = require './preview-message-view'
+OptionsView = require './options-view'
+SelectRendererView = require './select-renderer-view.coffee'
 analyticsWriteKey = "bp0dj6lufc"
 pkg = require "../package"
 version  = pkg.version
@@ -19,6 +21,10 @@ class PreviewView extends ReactEditorView
     params = params ? params || {}
     super(params)
 
+  lastEditor: null
+  lastRendererName: null # TODO: implement the tracking of this
+  matchedRenderersCache: {}
+
   constructor: () ->
     # Create TextBuffer
     buffer = new TextBuffer
@@ -31,9 +37,21 @@ class PreviewView extends ReactEditorView
     # Empty to start
     editor.setText ''
 
+    # Get EditorContents element
+    @editorContents = $('.editor-contents', @element)
     # Attach the MessageView
     @messageView = new PreviewMessageView()
     @showLoading()
+    # Attach the OptionsView
+    @optionsView = new OptionsView(@)
+    # Create SelectRendererView
+    @selectRendererView = new SelectRendererView(@)
+    # Create container for Previewing Rendered HTML
+    @htmlPreviewContainer = $$ ->
+      @div =>
+        @div "THIS IS A TEST"
+    @.append @htmlPreviewContainer
+    @htmlPreviewContainer.hide() # hide by default
 
     # Setup Observers
     # Update on Tab Change
@@ -69,6 +87,10 @@ class PreviewView extends ReactEditorView
     'pane-container:active-pane-item-changed', @handleTabChanges
 
   getTitle: ->
+    # if @lastRendererName?
+    #   "#{@lastRendererName} Preview"
+    # else
+    #   "Preview"
     if @getEditor()?
       "#{@getEditor().getTitle()} preview"
     else
@@ -107,13 +129,23 @@ class PreviewView extends ReactEditorView
         # Trigger update
         @changeHandler()
 
-  renderPreview: () ->
+  renderPreview: =>
+    @renderPreviewWithRenderer "Default"
+
+  renderPreviewWithRenderer: (rendererName) =>
     # Update Title
     @trigger 'title-changed'
     # Start preview processing
     cEditor = atom.workspace.getActiveEditor()
     editor = @getEditor()
-    if cEditor? and cEditor isnt editor
+    if cEditor? and cEditor isnt editor and \
+    cEditor instanceof Editor
+      # console.log "Remember last editor"
+      @lastEditor = cEditor
+    else
+      # console.log "Revert to last editor", @lastEditor
+      cEditor = @lastEditor
+    if cEditor?
       # Source Code text
       text = cEditor.getText()
       # console.log(text)
@@ -123,14 +155,26 @@ class PreviewView extends ReactEditorView
       @trigger 'title-changed'
       # Create Callback
       callback = (error, result) =>
+        @hideMessage()
         if error?
           return @showError error
-        outLang = renderer.lang()
-        grammar = atom.syntax.selectGrammar("source.#{outLang}", result)
-        editor.setGrammar grammar
-        editor.setText result
-        @redraw()
-        @hideMessage()
+        # Check if result is a string and therefore source code
+        if typeof result is "string"
+          outLang = renderer.lang()
+          grammar = atom.syntax.selectGrammar("source.#{outLang}", result)
+          editor.setGrammar grammar
+          editor.setText result
+          @redraw()
+          @hideViewPreview()
+        # Check if result is a Space-pen View (jQuery)
+        else if result instanceof $
+          # Is SpacePen View
+          @renderViewForPreview(result)
+        else
+          # Unknown result type
+          @hideViewPreview() # Show Editor by default
+          return @showError new Error("Unsupported result type.")
+
       # Start preview processing
       try
         grammar = cEditor.getGrammar().name
@@ -138,7 +182,20 @@ class PreviewView extends ReactEditorView
         # console.log grammar,filePath
         extension = path.extname(filePath)
         # console.log extension
-        renderer = renderers.findRenderer grammar, extension
+        # Get the renderer
+        renderer = null
+        if rendererName is "Default"
+          # Get the cached renderer for this file
+          renderer = @matchedRenderersCache[filePath]
+          # Check if cached renderer was found
+          if not renderer?
+            # Find renderer
+            renderer = renderers.findRenderer grammar, extension
+        else
+          # Get the Renderer by name
+          renderer = renderers.grammars[rendererName]
+        # Save matched renderer
+        @matchedRenderersCache[filePath] = renderer
         # console.log renderer
         if not text?
           # Track
@@ -196,6 +253,12 @@ class PreviewView extends ReactEditorView
         }
         return @showError e
 
+  toggleOptions: ->
+    @optionsView.toggle()
+
+  selectRenderer: ->
+    @selectRendererView.attach()
+
   showError: (result) ->
     failureMessage = result?.message
     @showMessage()
@@ -232,9 +295,17 @@ class PreviewView extends ReactEditorView
 
   showMessage: ->
     if not @messageView.hasParent()
-      editorContents = $('.editor-contents', @element)
-      editorContents.append @messageView
+      #@editorContents.append @messageView
+      @.append @messageView
 
   hideMessage: ->
     if @messageView.hasParent()
       @messageView.detach()
+
+  renderViewForPreview: (view) =>
+    @editorContents.hide()
+    @htmlPreviewContainer.show()
+    @htmlPreviewContainer.html view
+  hideViewPreview: =>
+    @htmlPreviewContainer.hide()
+    @editorContents.show()

@@ -18,11 +18,15 @@ module.exports =
   activate: (state) ->
     # console.log 'activate(state)'
     # console.log state
-    
+
     atom.workspaceView.command 'preview:toggle', =>
       @toggle()
+    atom.workspaceView.command 'preview:toggle-options', =>
+      @toggleOptions()
+    atom.workspaceView.command 'preview:select-renderer', =>
+      @selectRenderer()
 
-    atom.workspace.registerOpener (uriToOpen) ->
+    atom.workspace.registerOpener (uriToOpen) =>
       try
         {protocol, host, pathname} = url.parse(uriToOpen)
       catch error
@@ -33,7 +37,7 @@ module.exports =
       catch error
         return
       # Create and show preview!
-      new PreviewView()
+      @previewView = new PreviewView()
 
     # Deserialize state
     @toggle if state.isOpen
@@ -77,3 +81,11 @@ module.exports =
       if previewView instanceof PreviewView
         previewView.renderPreview()
         previousActivePane.activate()
+
+  toggleOptions: ->
+    if @previewView?
+      @previewView.toggleOptions()
+
+  selectRenderer: ->
+    if @previewView?
+      @previewView.selectRenderer()

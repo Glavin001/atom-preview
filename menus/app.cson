@@ -8,7 +8,9 @@
     'submenu': [
       'label': 'Preview'
       'submenu': [
-        { 'label': 'Toggle Preview', 'command': 'preview:toggle' }
+        { 'label': 'Toggle Preview Tab', 'command': 'preview:toggle' }
+        { 'label': 'Toggle Options', 'command': 'preview:toggle-options' }
+        { 'label': 'Select Renderer', 'command': 'preview:select-renderer' }
       ]
     ]
   }

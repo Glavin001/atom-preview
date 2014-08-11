@@ -1,6 +1,11 @@
+{$} = require 'atom'
 path = require 'path'
+temp = require("temp").track()
+fs = require 'fs'
 {allowUnsafeEval, allowUnsafeNewFunction} = require 'loophole'
 _ = require 'underscore-plus'
+# Speed up repetitive requiring renderers
+rCache = {}
 
 module.exports =
   findByGrammar: (grammar) ->
@@ -62,13 +67,13 @@ module.exports =
         resourcePath = atom.themes.resourcePath;
         # Atom UI Variables is under `./static/variables/`
         atomVariablesPath = path.resolve resourcePath, 'static', 'variables'
-        parser = new(less.Parser)({
+        parser = new(less.Parser) ({
           paths: [ # Specify search paths for @import directives
             '.',
             atomVariablesPath
             ],
           filename: filepath # Specify a filename, for better error messages
-        })
+        } )
         parser.parse(text, (e, tree) ->
           # console.log e, tree
           if e?
@@ -77,7 +82,7 @@ module.exports =
             output = tree.toCSS({
               # Do Not Minify CSS output
               compress: false
-            })
+            } )
             cb null, output
         )
       lang: -> 'css'
@@ -149,3 +154,54 @@ module.exports =
         cb null, jsContent
       exts: /^.*\.(em)$/
       lang: -> 'js'
+    'SpacePen':
+      render: (text, filepath, cb) ->
+        try
+          console.log "File Path:", filepath
+          extension = path.extname(filepath)
+          temp.open {suffix: extension}, (err, info) ->
+            if err?
+              return cb(err, null)
+            fs.write info.fd, text or "", (err) ->
+              if err?
+                return cb(err, null)
+              fs.close info.fd, (err) ->
+                if err?
+                  return cb(err, null)
+                # Get the View class module
+                console.log info.path
+                # Patch the NODE_PATH
+                cd = path.dirname(filepath)
+                nodePath = process.env.NODE_PATH
+                deli = ":"
+                newNodePath = "#{nodePath}#{deli}#{cd}"
+                console.log newNodePath
+                process.env.NODE_PATH = newNodePath
+                module.paths.push cd
+                console.log module.paths
+                mFilename = module.filename
+                module.filename = cd
+                require('module').Module._initPaths();
+                View = null
+                try
+                  View = require(info.path) # Get the View module
+                catch e
+                  # Revert NODE_PATH
+                  process.env.NODE_PATH = nodePath
+                  module.filename = mFilename
+                  require('module').Module._initPaths();
+                  return cb(e, null)
+                # Revert NODE_PATH
+                process.env.NODE_PATH = nodePath
+                module.filename = mFilename
+                require('module').Module._initPaths();
+                view = new View() # Create new View
+                # Check if it is an instance of a Space-pen View
+                if view instanceof $
+                  # Is Space-pen view
+                  cb(null, view)
+                else
+                  cb(new Error("Is not a SpacePen View"), null)
+        catch e
+          return cb(e, null)
+      exts: /^.*\.(coffee|js)$/

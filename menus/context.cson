@@ -5,3 +5,6 @@
 'context-menu':
   '.workspace .editor:not(.mini)':
     'Toggle Preview': 'preview:toggle'
+  '.workspace .editor:not(.mini).preview-container':
+    'Toggle Preview Options': 'preview:toggle-options'
+    'Select Preview Renderer': 'preview:select-renderer'
