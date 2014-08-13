@@ -49,7 +49,8 @@
     "react-tools": "^0.11.1",
     "ember-script": "0.0.14",
     "clear-require": "^1.0.1",
-    "temp": "^0.8.1"
+    "temp": "^0.8.1",
+    "LiveScript": "^1.2.0"
   },
   "devDependencies": {
     "grunt": "~0.4.2",
