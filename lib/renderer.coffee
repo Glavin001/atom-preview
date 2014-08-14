@@ -47,14 +47,14 @@ module.exports =
         coffeescript = require 'coffee-script'
         result = coffeescript.compile text
         cb null, result
-      exts: /^.*\.(coffee)$/
+      exts: /\.(coffee)$/i
       lang: -> 'js'
     'CoffeeScript (Literate)':
       render: (text, filepath, cb) ->
         coffeescript = require 'coffee-script'
         result = coffeescript.compile text, literate: true
         cb null, result
-      exts: /^.*\.(litcoffee)$/
+      exts: /\.(litcoffee)$/i
       lang: -> 'js'
     'TypeScript':
       render: (text, filepath, cb) ->
@@ -62,7 +62,7 @@ module.exports =
         result = allowUnsafeEval -> ts.compile(text)
         cb null, result
       lang: -> 'js'
-      exts: /^.*\.(ts)$/
+      exts: /\.(ts)$/i
     'LESS':
       render: (text, filepath, cb) ->
         less = require 'less'
@@ -89,7 +89,7 @@ module.exports =
             cb null, output
         )
       lang: -> 'css'
-      exts: /^.*\.(less)$/
+      exts: /\.(less)$/i
     'Jade':
       render: (text, filepath, cb) ->
         jade = require 'jade'
@@ -100,14 +100,14 @@ module.exports =
         result = fn()
         cb null, result
       lang: -> 'html'
-      exts: /^.*\.(jade)$/
+      exts: /\.(jade)$/i
     'Dogescript':
       render: (text, filepath, cb) ->
         dogescript = require "dogescript"
         beautify = true
         result = dogescript text, beautify
         cb null, result
-      exts: /^.*\.(djs)$/
+      exts: /\.(djs)$/i
       lang: -> 'js'
     'DSON':
       render: (text, filepath, cb) ->
@@ -118,7 +118,7 @@ module.exports =
           return cb null, result
         catch e
           return cb e, null
-      exts: /^.*\.(dson)$/
+      exts: /\.(dson)$/i
       lang: -> 'json'
     'Stylus':
       render: (text, filepath, cb) ->
@@ -127,7 +127,7 @@ module.exports =
         .set('filename', filepath)
         .render (err, css) ->
           cb err, css
-      exts: /^.*\.(styl)$/
+      exts: /\.(styl)$/i
       lang: -> 'css'
     'JavaScript (JSX)':
       render: (text, filepath, cb) ->
@@ -135,7 +135,7 @@ module.exports =
         options = {}
         result = reactTools.transform text, options
         cb null, result
-      exts: /^.*\.(jsx)$/
+      exts: /\.(jsx)$/i
       lang: -> 'js'
     'EmberScript':
       render: (text, filepath, cb) ->
@@ -155,7 +155,7 @@ module.exports =
         jsContent = em.js jsAst
         # console.log jsContent
         cb null, jsContent
-      exts: /^.*\.(em)$/
+      exts: /\.(em)$/i
       lang: -> 'js'
     'SpacePen':
       render: (text, filepath, cb) ->
@@ -197,4 +197,4 @@ module.exports =
             )
         catch e
           return cb(e, null)
-      exts: /^.*\.(coffee|js)$/
+      exts: /\.(coffee|js)$/i
