@@ -209,3 +209,19 @@ module.exports =
         cb null, result
       exts: /\.(ls)$/i
       lang: -> 'js'
+    'ng-classify (coffee)':
+      render: (text, filepath, cb) ->
+        ngClassify = require 'ng-classify'
+        result = ngClassify(text) + '\n'
+        cb null, result
+      exts: /\.(coffee)$/i
+      lang: -> 'coffee'
+    'ng-classify (js)':
+      render: (text, filepath, cb) ->
+        ngClassify = require 'ng-classify'
+        result = ngClassify text
+        coffeescript = require 'coffee-script'
+        result = coffeescript.compile result
+        cb null, result
+      exts: /\.(coffee)$/i
+      lang: -> 'js'
