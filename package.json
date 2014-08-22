@@ -50,7 +50,8 @@
     "ember-script": "0.0.14",
     "clear-require": "^1.0.1",
     "temp": "^0.8.1",
-    "LiveScript": "^1.2.0"
+    "LiveScript": "^1.2.0",
+    "ng-classify": "^4.0.2"
   },
   "devDependencies": {
     "grunt": "~0.4.2",
@@ -63,6 +64,7 @@
     "preview",
     "coffeescript",
     "less",
-    "jade"
+    "jade",
+    "ng-classify"
   ]
 }
