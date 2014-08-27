@@ -10,13 +10,12 @@ pkg = require "../package"
 version  = pkg.version
 # Get Atom internal modules
 resourcePath = atom.config.resourcePath
-# EditorView = require path.resolve resourcePath, 'src', 'editor-view'
-ReactEditorView = require path.resolve resourcePath, 'src', 'react-editor-view'
+EditorView = require path.resolve resourcePath, 'src', 'editor-view'
 TextBuffer = require path.resolve resourcePath, 'node_modules', 'text-buffer'
 Editor = require path.resolve resourcePath, 'src', 'editor'
 
 module.exports =
-class PreviewView extends ReactEditorView
+class PreviewView extends EditorView
   @content: (params) ->
     params = params ? params || {}
     super(params)
