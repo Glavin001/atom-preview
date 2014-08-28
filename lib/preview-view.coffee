@@ -10,7 +10,15 @@ pkg = require "../package"
 version  = pkg.version
 # Get Atom internal modules
 resourcePath = atom.config.resourcePath
-EditorView = require path.resolve resourcePath, 'src', 'editor-view'
+try
+  # Try to get specifically the ReactEditorView
+  # For backwards compatibilities with previous Atom versions
+  # v0.123.0 and earlier
+  ReactEditorView = require path.resolve resourcePath, 'src', 'react-editor-view'
+catch e
+  # Catch error
+  # It will error on Atom versions v0.124.0 and later
+EditorView = ReactEditorView ? require path.resolve resourcePath, 'src', 'editor-view'
 TextBuffer = require path.resolve resourcePath, 'node_modules', 'text-buffer'
 Editor = require path.resolve resourcePath, 'src', 'editor'
 
