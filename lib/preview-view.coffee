@@ -155,6 +155,8 @@ class PreviewView extends EditorView
     if cEditor?
       # Source Code text
       text = cEditor.getText()
+      # Save Preview's Scroll position
+      spos = editor.getScrollTop()
       # console.log(text)
       # console.log(cEditor is editor, cEditor, editor)
       @showLoading()
@@ -182,6 +184,8 @@ class PreviewView extends EditorView
           grammar = atom.syntax.selectGrammar("source.#{outLang}", result)
           editor.setGrammar grammar
           editor.setText result
+          # Restore Preview's Scroll Positon
+          editor.setScrollTop(spos)
           @hideViewPreview()
           focusOnEditor()
         # Check if result is a Space-pen View (jQuery)
