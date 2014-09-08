@@ -182,7 +182,6 @@ class PreviewView extends EditorView
           grammar = atom.syntax.selectGrammar("source.#{outLang}", result)
           editor.setGrammar grammar
           editor.setText result
-          @redraw()
           @hideViewPreview()
           focusOnEditor()
         # Check if result is a Space-pen View (jQuery)
