@@ -1,5 +1,17 @@
 # Changelog
 
+## v0.12.3 (2013-09-08)
+
+## Bug Fixes
+
+- [Save and restore Preview scroll position between updates, to prevent from preview editor jumping to beginning of file](https://github.com/Glavin001/atom-preview/issues/62)
+
+## v0.12.2 (2013-09-08)
+
+## Bug Fixes
+
+- [Remove deprecated call to EditorView.redraw](https://github.com/Glavin001/atom-preview/issues/66)
+
 ## v0.12.1 (2014-08-27)
 
 ## Bug Fixes
@@ -47,7 +59,7 @@
 
 ## Features
 
-- Closes #22. Add interface for User to select (force) Renderer. 
+- Closes #22. Add interface for User to select (force) Renderer.
 - Closes #47. SpacePen preview rendering support.
 
 ## v0.9.0 (2014-08-10)
@@ -125,7 +137,7 @@
 
 ### Bug Fixes
 
-- Fixes #28. Workaround for PreviewView to handle getModel method. 
+- Fixes #28. Workaround for PreviewView to handle getModel method.
 
 ## v0.6.2 (2014-07-27)
 
