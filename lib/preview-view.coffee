@@ -18,12 +18,20 @@ try
 catch e
   # Catch error
   # It will error on Atom versions v0.124.0 and later
-EditorView = ReactEditorView ? require path.resolve resourcePath, 'src', 'editor-view'
+try
+  EditorView = ReactEditorView ? require path.resolve resourcePath, 'src', 'editor-view'
+catch e
+  # Catch error
+TextEditorView = EditorView ? require path.resolve resourcePath, 'src', 'text-editor-view'
 TextBuffer = require path.resolve resourcePath, 'node_modules', 'text-buffer'
-Editor = require path.resolve resourcePath, 'src', 'editor'
+try
+  Editor = require path.resolve resourcePath, 'src', 'editor'
+catch e
+  # Catch error
+Editor = Editor ? require path.resolve resourcePath, 'src', 'text-editor'
 
 module.exports =
-class PreviewView extends EditorView
+class PreviewView extends TextEditorView
   @content: (params) ->
     params = params ? params || {}
     super(params)
