@@ -44,16 +44,18 @@ module.exports =
   grammars:
     'CoffeeScript':
       render: (text, filepath, cb) ->
-        coffeescript = require 'coffee-script'
-        result = coffeescript.compile text
-        cb null, result
+        allowUnsafeEval ->
+          coffeescript = require 'coffee-script'
+          result = coffeescript.compile text
+          cb null, result
       exts: /\.(coffee)$/i
       lang: -> 'js'
     'CoffeeScript (Literate)':
       render: (text, filepath, cb) ->
-        coffeescript = require 'coffee-script'
-        result = coffeescript.compile text, literate: true
-        cb null, result
+        allowUnsafeEval ->
+          coffeescript = require 'coffee-script'
+          result = coffeescript.compile text, literate: true
+          cb null, result
       exts: /\.(litcoffee)$/i
       lang: -> 'js'
     'TypeScript':
