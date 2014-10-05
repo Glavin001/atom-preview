@@ -5,6 +5,7 @@ renderers = require './renderer'
 PreviewMessageView = require './preview-message-view'
 OptionsView = require './options-view'
 SelectRendererView = require './select-renderer-view.coffee'
+{allowUnsafeEval} = require 'loophole'
 analyticsWriteKey = "bp0dj6lufc"
 pkg = require "../package"
 version  = pkg.version
@@ -79,7 +80,9 @@ class PreviewView extends TextEditorView
       @debouncedRenderPreview = _.debounce @renderPreview.bind(@), wait
 
     # Setup Analytics
-    Analytics = require 'analytics-node'
+    Analytics = null
+    allowUnsafeEval ->
+      Analytics = require 'analytics-node'
     @analytics = new Analytics analyticsWriteKey
     # set a unique identifier
     if not atom.config.get 'preview._analyticsUserId'
