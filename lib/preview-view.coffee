@@ -1,4 +1,5 @@
 {$, $$, $$$} = require 'atom'
+util = require 'util'
 path = require 'path'
 _ = require 'underscore-plus'
 renderers = require './renderer'
@@ -24,7 +25,6 @@ try
 catch e
   # Catch error
 TextEditorView = EditorView ? require path.resolve resourcePath, 'src', 'text-editor-view'
-TextBuffer = require path.resolve resourcePath, 'node_modules', 'text-buffer'
 try
   Editor = require path.resolve resourcePath, 'src', 'editor'
 catch e
@@ -42,15 +42,14 @@ class PreviewView extends TextEditorView
   matchedRenderersCache: {}
 
   constructor: () ->
-    # Create TextBuffer
-    buffer = new TextBuffer
-    # Create Editor
-    editor = new Editor(buffer: buffer)
     # Initialize the EditorView
-    super(editor)
+    @self = super(mini:false, placeholderText:"Please type in a Text Editor to render preview")
+    @self.getTitle = @getTitle
+    # console.log('constructor editor', @self, @, @self.getModel(), @getModel())
     # Add classes
     @addClass('preview-container')
     # Empty to start
+    editor = @self.getModel()
     editor.setText ''
 
     # Get EditorContents element
@@ -97,6 +96,7 @@ class PreviewView extends TextEditorView
 
     # Start rendering
     @renderPreview()
+    return @self
 
   destroy: ->
     @messageView.detach()
@@ -113,6 +113,9 @@ class PreviewView extends TextEditorView
       "#{@getEditor().getTitle()} preview"
     else
       "Preview"
+
+  getEditor: ->
+    @self.getEditor()
 
   getPath: ->
     if @getEditor()?
@@ -156,6 +159,8 @@ class PreviewView extends TextEditorView
     # Start preview processing
     cEditor = atom.workspace.getActiveEditor()
     editor = @getEditor()
+    # console.log('renderPreviewWithRenderer')
+    # console.log('editor', editor, cEditor)
     if cEditor? and cEditor isnt editor and \
     cEditor instanceof Editor
       # console.log "Remember last editor"
@@ -175,6 +180,7 @@ class PreviewView extends TextEditorView
       @trigger 'title-changed'
       # Create Callback
       callback = (error, result) =>
+        # console.log('callback', error, result.length)
         @hideMessage()
         # Force focus on the editor
         focusOnEditor = =>

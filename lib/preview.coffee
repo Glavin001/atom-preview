@@ -26,7 +26,8 @@ module.exports =
     atom.workspaceView.command 'preview:select-renderer', =>
       @selectRenderer()
 
-    atom.workspace.registerOpener (uriToOpen) =>
+    atom.workspace.addOpener (uriToOpen) =>
+      console.log(uriToOpen)
       try
         {protocol, host, pathname} = url.parse(uriToOpen)
       catch error
@@ -37,7 +38,7 @@ module.exports =
       catch error
         return
       # Create and show preview!
-      @previewView = new PreviewView()
+      return @previewView = new PreviewView()
 
     # Deserialize state
     @toggle if state.isOpen
