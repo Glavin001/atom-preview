@@ -304,7 +304,7 @@ class PreviewView extends TextEditorView
     @selectRendererView.attach()
 
   showError: (result) ->
-    console.log('showError', result)
+    # console.log('showError', result)
     failureMessage = result?.message
     @showMessage()
     @messageView.message.html $$$ ->
