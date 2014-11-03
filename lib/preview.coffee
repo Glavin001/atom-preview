@@ -27,7 +27,7 @@ module.exports =
       @selectRenderer()
 
     atom.workspace.addOpener (uriToOpen) =>
-      console.log(uriToOpen)
+      # console.log(uriToOpen)
       try
         {protocol, host, pathname} = url.parse(uriToOpen)
       catch error
@@ -38,7 +38,8 @@ module.exports =
       catch error
         return
       # Create and show preview!
-      return @previewView = new PreviewView()
+      @previewView = new PreviewView()
+      return @previewView.self
 
     # Deserialize state
     @toggle if state.isOpen
@@ -78,7 +79,8 @@ module.exports =
       return
     previousActivePane = atom.workspace.getActivePane()
     atom.workspace.open(@uri, split: 'right', searchAllPanes: true)
-    .done (previewView) ->
+    .done (previewView) =>
+      # console.log("previewView", previewView, @previewView)
       if previewView instanceof PreviewView
         previewView.renderPreview()
         previousActivePane.activate()

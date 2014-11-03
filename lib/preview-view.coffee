@@ -45,6 +45,7 @@ class PreviewView extends TextEditorView
     # Initialize the EditorView
     @self = super(mini:false, placeholderText:"Please type in a Text Editor to render preview")
     @self.getTitle = @getTitle
+    @self.getUri = @getUri
     # console.log('constructor editor', @self, @, @self.getModel(), @getModel())
     # Add classes
     @addClass('preview-container')
@@ -53,7 +54,7 @@ class PreviewView extends TextEditorView
     editor.setText ''
 
     # Get EditorContents element
-    @editorContents = $('.editor-contents', @element)
+    @editorContents = $('.editor-contents', @self)
     # Attach the MessageView
     @messageView = new PreviewMessageView()
     @showLoading()
@@ -65,7 +66,7 @@ class PreviewView extends TextEditorView
     @htmlPreviewContainer = $$ ->
       @div =>
         @div "THIS IS A TEST"
-    @.append @htmlPreviewContainer
+    @self.append @htmlPreviewContainer
     @htmlPreviewContainer.hide() # hide by default
 
     # Setup Observers
@@ -96,7 +97,7 @@ class PreviewView extends TextEditorView
 
     # Start rendering
     @renderPreview()
-    return @self
+    return @
 
   destroy: ->
     @messageView.detach()
@@ -159,7 +160,7 @@ class PreviewView extends TextEditorView
     # Start preview processing
     cEditor = atom.workspace.getActiveEditor()
     editor = @getEditor()
-    # console.log('renderPreviewWithRenderer')
+    # console.log('renderPreviewWithRenderer', rendererName)
     # console.log('editor', editor, cEditor)
     if cEditor? and cEditor isnt editor and \
     cEditor instanceof Editor
@@ -236,6 +237,7 @@ class PreviewView extends TextEditorView
         else
           # Get the Renderer by name
           renderer = renderers.grammars[rendererName]
+        # console.log('renderer', renderer)
         # Save matched renderer
         @matchedRenderersCache[filePath] = renderer
         # console.log renderer
@@ -302,6 +304,7 @@ class PreviewView extends TextEditorView
     @selectRendererView.attach()
 
   showError: (result) ->
+    console.log('showError', result)
     failureMessage = result?.message
     @showMessage()
     @messageView.message.html $$$ ->
@@ -338,7 +341,7 @@ class PreviewView extends TextEditorView
   showMessage: ->
     if not @messageView.hasParent()
       #@editorContents.append @messageView
-      @.append @messageView
+      @self.append @messageView
 
   hideMessage: ->
     if @messageView.hasParent()
