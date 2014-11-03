@@ -1,5 +1,44 @@
 # Changelog
 
+## v0.13.4 (2013-11-02)
+
+## Bug Fixes
+
+- [See #69. Fix more breaking changes caused by newer Atom](https://github.com/Glavin001/atom-preview/commit/2da0b3ed80520230eadb71f6e8bb87fc20467f4e)
+> Fixed and tested in Atom v0.141.0:
+  - Space-Pen Preview (HTML view rendering in general)
+  - Error messages pop-up (not appearing)
+  - Toggle Options and Renderer Select view (erroring)
+  - Toggling Preview will open another Preview tab and
+    not close Preview tab is already open
+
+
+## v0.13.3 (2013-10-19)
+
+## Bug Fixes
+
+- [Fixes #69. Fix usage of old Atom API causing Preview to fail](https://github.com/Glavin001/atom-preview/commit/62fac7d115387f6671d9b5e91a768c27aa4490aa)
+
+## v0.13.2 (2013-10-05)
+
+## Bug Fixes
+
+- [Fixes #68. Fix Unsafe-Eval error with Analytics-Node dependency.](https://github.com/Glavin001/atom-preview/commit/e11d2c1809866c37da051f9a55d473396b69a093)
+
+
+## v0.13.1 (2013-10-05)
+
+## Bug Fixes
+
+- [See #68. Resolve Unsafe-Eval error with CoffeeScript Preview](https://github.com/Glavin001/atom-preview/commit/2152f3b3c1a2b699546c10179902be02cddc816a)
+
+
+## v0.13.0 (2013-09-28)
+
+## Bug Fixes
+
+- [Upgrade to TextEditorView from EditorView.](https://github.com/Glavin001/atom-preview/commit/8003df2559beabcbdc2b09fdd7398a82ade72371)
+
 ## v0.12.3 (2013-09-08)
 
 ## Bug Fixes
