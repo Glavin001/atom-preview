@@ -39,5 +39,5 @@ class OptionsView extends View
     @detach()
 
   selectRenderer: =>
-    console.log 'Select Renderer!'
+    # console.log 'Select Renderer!'
     @previewView.selectRenderer()
