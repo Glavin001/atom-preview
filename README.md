@@ -4,8 +4,8 @@
 
 [![Gitter chat](https://badges.gitter.im/Glavin001/atom-preview.png)](https://gitter.im/Glavin001/atom-preview)
 
-[![star this repo](http://github-svg-buttons.herokuapp.com/star.svg?user=Glavin001&repo=atom-preview)](http://github.com/Glavin001/atom-preview)
-[![fork this repo](http://github-svg-buttons.herokuapp.com/fork.svg?user=Glavin001&repo=atom-preview)](http://github.com/Glavin001/atom-preview/fork)
+[![star this repo](http://githubbadges.com/star.svg?user=Glavin001&repo=atom-preview&background=007ec6&style=flat)](http://github.com/Glavin001/atom-preview)
+[![fork this repo](http://githubbadges.com/fork.svg?user=Glavin001&repo=atom-preview&background=007ec6&style=flat)](http://github.com/Glavin001/atom-preview/fork)
 
 Atom Package: https://atom.io/packages/preview
 
