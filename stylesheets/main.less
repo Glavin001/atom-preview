@@ -5,13 +5,22 @@
  * For more information: https://atom.io/docs/latest/creating-a-package#stylesheets
  */
 
-.preview-container {
+.atom-preview-container {
   overflow: scroll;
   box-sizing: border-box;
   padding: 0px;
+
   code {
     padding: 0px;
     background: none;
+  }
+
+  atom-text-editor {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
   }
 
   .preview-code-block {

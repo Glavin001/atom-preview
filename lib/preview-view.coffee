@@ -1,4 +1,6 @@
-{$, $$, $$$} = require 'atom'
+{Emitter, Disposable, CompositeDisposable} = require 'atom'
+{$, $$, $$$, ScrollView, TextEditorView} = require 'atom-space-pen-views'
+
 util = require 'util'
 path = require 'path'
 _ = require 'underscore-plus'
@@ -10,6 +12,7 @@ SelectRendererView = require './select-renderer-view.coffee'
 analyticsWriteKey = "bp0dj6lufc"
 pkg = require "../package"
 version  = pkg.version
+
 # Get Atom internal modules
 resourcePath = atom.config.resourcePath
 try
@@ -31,53 +34,62 @@ catch e
   # Catch error
 Editor = Editor ? require path.resolve resourcePath, 'src', 'text-editor'
 
-module.exports =
-class PreviewView extends TextEditorView
-  @content: (params) ->
-    params = params ? params || {}
-    super(params)
+class PreviewView extends HTMLElement
+
+  textEditor: document.createElement('atom-text-editor')
+  messageView = null
+  optionsView = null
+  selectRendererView = null
+  htmlPreviewContainer = null
 
   lastEditor: null
   lastRendererName: null # TODO: implement the tracking of this
   matchedRenderersCache: {}
 
-  constructor: () ->
-    # Initialize the EditorView
-    @self = super(mini:false, placeholderText:"Please type in a Text Editor to render preview")
-    @self.getTitle = @getTitle
-    @self.getUri = @getUri
-    # console.log('constructor editor', @self, @, @self.getModel(), @getModel())
-    # Add classes
-    @addClass('preview-container')
-    # Empty to start
-    editor = @self.getModel()
-    editor.setText ''
-
-    # Get EditorContents element
-    @editorContents = $('.editor-contents', @self)
-    # Attach the MessageView
-    @messageView = new PreviewMessageView()
-    @showLoading()
-    # Attach the OptionsView
-    @optionsView = new OptionsView(@)
-    # Create SelectRendererView
-    @selectRendererView = new SelectRendererView(@)
-    # Create container for Previewing Rendered HTML
-    @htmlPreviewContainer = $$ ->
-      @div =>
-        @div "THIS IS A TEST"
-    @self.append @htmlPreviewContainer
-    @htmlPreviewContainer.hide() # hide by default
+  # Public: Initializes the indicator.
+  initialize: ->
+    @classList.add('atom-preview-container')
 
     # Setup Observers
     # Update on Tab Change
-    atom.workspaceView.on \
-    'pane-container:active-pane-item-changed', @handleTabChanges
+    # atom.workspaceView.on \
+    # 'pane-container:active-pane-item-changed', @handleTabChanges
+    @activeItemSubscription = atom.workspace.onDidChangeActivePaneItem =>
+      @handleTabChanges()
     # Setup debounced renderer
     atom.config.observe 'preview.refreshDebouncePeriod', \
     (wait) =>
       # console.log "update debounce to #{wait} ms"
       @debouncedRenderPreview = _.debounce @renderPreview.bind(@), wait
+
+    @self = $(@)
+
+    @editorContents = $(@textEditor)
+
+    # Add Text Editor
+    # Placeholder = Please type in a Text Editor to render preview
+    @appendChild(@textEditor)
+
+    # Create container for Previewing Rendered HTML
+    @htmlPreviewContainer = $$ ->
+        @div =>
+          @div "Empty HTML Preview..."
+    # Add HTML Previewer
+    @self.append @htmlPreviewContainer
+    @htmlPreviewContainer.hide() # hide by default
+
+    # Attach the MessageView
+    @messageView = new PreviewMessageView()
+    @self.append(@messageView)
+
+    # Attach the OptionsView
+    @optionsView = new OptionsView(@)
+
+    # Create SelectRendererView
+    @selectRendererView = new SelectRendererView(@)
+
+    @showLoading()
+
 
     # Setup Analytics
     Analytics = null
@@ -99,37 +111,17 @@ class PreviewView extends TextEditorView
     @renderPreview()
     return @
 
-  destroy: ->
-    @messageView.detach()
-    @unsubscribe()
-    atom.workspaceView.off \
-    'pane-container:active-pane-item-changed', @handleTabChanges
-
-  getTitle: ->
-    # if @lastRendererName?
-    #   "#{@lastRendererName} Preview"
-    # else
-    #   "Preview"
-    if @getEditor()?
-      "#{@getEditor().getTitle()} preview"
-    else
-      "Preview"
-
-  getEditor: ->
-    @self.getEditor()
-
-  getPath: ->
-    if @getEditor()?
-      @getEditor().getPath()
-
-  getUri: ->
-    "preview://editor"
-
-  focus: ->
-    false
-
   changeHandler: () =>
     @debouncedRenderPreview()
+
+  subscribe: () =>
+      # TODO
+
+  unsubscribe: () =>
+      # TODO
+
+  trigger: () =>
+      # TODO
 
   handleEvents: () ->
     currEditor = atom.workspace.getActiveEditor()
@@ -151,6 +143,88 @@ class PreviewView extends TextEditorView
         # Trigger update
         @changeHandler()
 
+  toggleOptions: ->
+    @optionsView.toggle()
+
+  selectRenderer: ->
+    @selectRendererView.attach()
+
+  showError: (result) ->
+    # console.log('showError', result)
+    failureMessage = result?.message
+    @showMessage()
+    @messageView.message.html $$$ ->
+      @div
+        class: 'preview-spinner'
+        style: 'text-align: center'
+        =>
+          @span
+            class: 'loading loading-spinner-large inline-block'
+          @div
+            class: 'text-highlight',
+            'Previewing Failed\u2026'
+            =>
+              @div
+                class: 'text-error'
+                failureMessage if failureMessage?
+          @div
+            class: 'text-warning'
+            result?.stack
+
+  showLoading: ->
+    @showMessage()
+    @messageView.message.html $$$ ->
+      @div
+        class: 'preview-spinner'
+        style: 'text-align: center'
+        =>
+          @span
+            class: 'loading loading-spinner-large inline-block'
+          @div
+            class: 'text-highlight',
+            'Loading Preview\u2026'
+
+  showMessage: ->
+    if not @messageView.hasParent()
+      #@editorContents.append @messageView
+      @self.append @messageView
+
+  hideMessage: ->
+    if @messageView.hasParent()
+      @messageView.detach()
+
+  renderViewForPreview: (view) =>
+    @editorContents.hide()
+    @htmlPreviewContainer.show()
+    @htmlPreviewContainer.html view
+  hideViewPreview: =>
+    @htmlPreviewContainer.hide()
+    @editorContents.show()
+
+  getTitle: ->
+    if @getEditor()?
+      "#{@getEditor().getTitle()} preview"
+    else
+      "Preview"
+
+  getEditor: ->
+    @textEditor.getModel()
+
+  getPath: ->
+    if @getEditor()?
+      @getEditor().getPath()
+
+  getUri: ->
+    "atom://atom-preview"
+
+  focus: ->
+    false
+
+  # Public: Destroys the indicator.
+  destroy: ->
+    @messageView.detach()
+    @activeItemSubscription.dispose()
+
   renderPreview: =>
     @renderPreviewWithRenderer "Default"
 
@@ -169,7 +243,10 @@ class PreviewView extends TextEditorView
     else
       # console.log "Revert to last editor", @lastEditor
       cEditor = @lastEditor
-    if cEditor?
+    if not cEditor?
+      # cEditor not defined
+      @showError({message:"Please type a Text Editor to render preview"})
+    else
       # Source Code text
       text = cEditor.getText()
       # Save Preview's Scroll position
@@ -297,60 +374,4 @@ class PreviewView extends TextEditorView
         }
         return @showError e
 
-  toggleOptions: ->
-    @optionsView.toggle()
-
-  selectRenderer: ->
-    @selectRendererView.attach()
-
-  showError: (result) ->
-    # console.log('showError', result)
-    failureMessage = result?.message
-    @showMessage()
-    @messageView.message.html $$$ ->
-      @div
-        class: 'preview-spinner'
-        style: 'text-align: center'
-        =>
-          @span
-            class: 'loading loading-spinner-large inline-block'
-          @div
-            class: 'text-highlight',
-            'Previewing Failed\u2026'
-            =>
-              @div
-                class: 'text-error'
-                failureMessage if failureMessage?
-          @div
-            class: 'text-warning'
-            result?.stack
-
-  showLoading: ->
-    @showMessage()
-    @messageView.message.html $$$ ->
-      @div
-        class: 'preview-spinner'
-        style: 'text-align: center'
-        =>
-          @span
-            class: 'loading loading-spinner-large inline-block'
-          @div
-            class: 'text-highlight',
-            'Loading Preview\u2026'
-
-  showMessage: ->
-    if not @messageView.hasParent()
-      #@editorContents.append @messageView
-      @self.append @messageView
-
-  hideMessage: ->
-    if @messageView.hasParent()
-      @messageView.detach()
-
-  renderViewForPreview: (view) =>
-    @editorContents.hide()
-    @htmlPreviewContainer.show()
-    @htmlPreviewContainer.html view
-  hideViewPreview: =>
-    @htmlPreviewContainer.hide()
-    @editorContents.show()
+module.exports = document.registerElement 'atom-preview-editor', prototype: PreviewView.prototype

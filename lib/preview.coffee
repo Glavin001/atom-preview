@@ -7,7 +7,7 @@ module.exports =
     refreshDebouncePeriod: 100
 
   previewView: null
-  uri: "preview://editor"
+  uri: "atom://atom-preview"
 
   ###
   # This required method is called when your package is activated. It is passed
@@ -27,19 +27,9 @@ module.exports =
       @selectRenderer()
 
     atom.workspace.addOpener (uriToOpen) =>
-      # console.log(uriToOpen)
-      try
-        {protocol, host, pathname} = url.parse(uriToOpen)
-      catch error
-        return
-      return unless protocol is 'preview:'
-      try
-        pathname = decodeURI(pathname) if pathname
-      catch error
-        return
+      return unless uriToOpen is @uri
       # Create and show preview!
       @previewView = new PreviewView()
-      return @previewView.self
 
     # Deserialize state
     @toggle if state.isOpen
@@ -51,7 +41,7 @@ module.exports =
   # activate method so you can restore your view to where the user left off.
   ###
   serialize: ->
-    console.log 'serialize()'
+    # console.log 'serialize()'
     previewPane = atom.workspace.paneForUri(@uri)
     return {
       isOpen: previewPane?
@@ -64,7 +54,7 @@ module.exports =
   # don't need to worry because that's getting torn down anyway.
   ###
   deactivate: ->
-    console.log 'deactivate()'
+    # console.log 'deactivate()'
     previewPane = atom.workspace.paneForUri(@uri)
     if previewPane
       previewPane.destroyItem(previewPane.itemForUri(@uri))
@@ -80,10 +70,11 @@ module.exports =
     previousActivePane = atom.workspace.getActivePane()
     atom.workspace.open(@uri, split: 'right', searchAllPanes: true)
     .done (previewView) =>
-      # console.log("previewView", previewView, @previewView)
+    #   console.log("previewView", previewView, @previewView)
       if previewView instanceof PreviewView
-        previewView.renderPreview()
-        previousActivePane.activate()
+          previewView.initialize()
+    #     previewView.renderPreview()
+    #     previousActivePane.activate()
 
   toggleOptions: ->
     if @previewView?
