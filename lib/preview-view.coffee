@@ -1,4 +1,4 @@
-{Emitter, Disposable, CompositeDisposable} = require 'atom'
+{Emitter, Disposable, CompositeDisposable, TextEditor} = require 'atom'
 {$, $$, $$$, ScrollView, TextEditorView} = require 'atom-space-pen-views'
 
 util = require 'util'
@@ -13,27 +13,6 @@ analyticsWriteKey = "bp0dj6lufc"
 pkg = require "../package"
 version  = pkg.version
 
-# Get Atom internal modules
-resourcePath = atom.config.resourcePath
-try
-  # Try to get specifically the ReactEditorView
-  # For backwards compatibilities with previous Atom versions
-  # v0.123.0 and earlier
-  ReactEditorView = require path.resolve resourcePath, 'src', 'react-editor-view'
-catch e
-  # Catch error
-  # It will error on Atom versions v0.124.0 and later
-try
-  EditorView = ReactEditorView ? require path.resolve resourcePath, 'src', 'editor-view'
-catch e
-  # Catch error
-TextEditorView = EditorView ? require path.resolve resourcePath, 'src', 'text-editor-view'
-try
-  Editor = require path.resolve resourcePath, 'src', 'editor'
-catch e
-  # Catch error
-Editor = Editor ? require path.resolve resourcePath, 'src', 'text-editor'
-
 class PreviewView extends HTMLElement
 
   textEditor: document.createElement('atom-text-editor')
@@ -46,14 +25,15 @@ class PreviewView extends HTMLElement
   lastRendererName: null # TODO: implement the tracking of this
   matchedRenderersCache: {}
 
+  # Setup Observers
+  emitter: new Emitter
+  disposables: new CompositeDisposable
+
   # Public: Initializes the indicator.
   initialize: ->
     @classList.add('atom-preview-container')
 
-    # Setup Observers
     # Update on Tab Change
-    # atom.workspaceView.on \
-    # 'pane-container:active-pane-item-changed', @handleTabChanges
     @activeItemSubscription = atom.workspace.onDidChangeActivePaneItem =>
       @handleTabChanges()
     # Setup debounced renderer
@@ -90,7 +70,6 @@ class PreviewView extends HTMLElement
 
     @showLoading()
 
-
     # Setup Analytics
     Analytics = null
     allowUnsafeEval ->
@@ -114,21 +93,20 @@ class PreviewView extends HTMLElement
   changeHandler: () =>
     @debouncedRenderPreview()
 
-  subscribe: () =>
-      # TODO
-
-  unsubscribe: () =>
-      # TODO
-
-  trigger: () =>
-      # TODO
+  onDidChangeTitle: (callback) ->
+      @emitter.on 'did-change-title', callback
 
   handleEvents: () ->
     currEditor = atom.workspace.getActiveEditor()
     if currEditor?
-      @subscribe currEditor.getBuffer(), \
-      'contents-modified', @changeHandler
-      @subscribe currEditor, 'path-changed', => @trigger 'title-changed'
+      @disposables.add currEditor.getBuffer().onDidStopChanging =>
+        @changeHandler() if atom.config.get 'preview.liveUpdate'
+      @disposables.add currEditor.onDidChangePath =>
+          @emitter.emit 'did-change-title'
+      @disposables.add currEditor.getBuffer().onDidSave =>
+        @changeHandler() unless atom.config.get 'preview.liveUpdate'
+      @disposables.add currEditor.getBuffer().onDidReload =>
+        @changeHandler() unless atom.config.get 'preview.liveUpdate'
 
   handleTabChanges: =>
     updateOnTabChange =
@@ -137,7 +115,7 @@ class PreviewView extends HTMLElement
       currEditor = atom.workspace.getActiveEditor()
       if currEditor?
         # Stop watching for events on current Editor
-        @unsubscribe()
+        @disposables.dispose()
         # Start watching editors on new editor
         @handleEvents()
         # Trigger update
@@ -194,6 +172,7 @@ class PreviewView extends HTMLElement
       @messageView.detach()
 
   renderViewForPreview: (view) =>
+    console.log('renderViewForPreview', view, @htmlPreviewContainer)
     @editorContents.hide()
     @htmlPreviewContainer.show()
     @htmlPreviewContainer.html view
@@ -224,20 +203,21 @@ class PreviewView extends HTMLElement
   destroy: ->
     @messageView.detach()
     @activeItemSubscription.dispose()
+    @disposables.dispose()
 
   renderPreview: =>
     @renderPreviewWithRenderer "Default"
 
   renderPreviewWithRenderer: (rendererName) =>
     # Update Title
-    @trigger 'title-changed'
+    @emitter.emit 'did-change-title'
     # Start preview processing
     cEditor = atom.workspace.getActiveEditor()
     editor = @getEditor()
     # console.log('renderPreviewWithRenderer', rendererName)
     # console.log('editor', editor, cEditor)
     if cEditor? and cEditor isnt editor and \
-    cEditor instanceof Editor
+    cEditor instanceof TextEditor
       # console.log "Remember last editor"
       @lastEditor = cEditor
     else
@@ -255,7 +235,7 @@ class PreviewView extends HTMLElement
       # console.log(cEditor is editor, cEditor, editor)
       @showLoading()
       # Update Title
-      @trigger 'title-changed'
+      @emitter.emit 'did-change-title'
       # Create Callback
       callback = (error, result) =>
         # console.log('callback', error, result.length)
@@ -288,7 +268,6 @@ class PreviewView extends HTMLElement
           # Is SpacePen View
           @renderViewForPreview(result)
           focusOnEditor()
-
         else
           # Unknown result type
           @hideViewPreview() # Show Editor by default
