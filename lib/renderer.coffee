@@ -96,8 +96,8 @@ module.exports =
         options = {
           pretty: true
         }
-        fn = allowUnsafeNewFunction -> jade.compile text, options
-        result = fn()
+        fn = allowUnsafeNewFunction -> allowUnsafeEval -> jade.compile text, options
+        result = allowUnsafeNewFunction -> allowUnsafeEval -> fn()
         cb null, result
       lang: -> 'html'
       exts: /\.(jade)$/i
