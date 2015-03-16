@@ -28,7 +28,7 @@ class OptionsView extends View
   initialize: (@previewView) ->
 
   attach: =>
-    @previewView.editorContents.append @
+    @previewView.self.append @
     @previewView.hideMessage()
   toggle: =>
     if @hasParent()

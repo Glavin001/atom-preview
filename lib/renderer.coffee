@@ -1,4 +1,4 @@
-{$} = require 'atom'
+{$, View} = require 'atom'
 path = require 'path'
 temp = require("temp").track()
 fs = require 'fs'
@@ -180,7 +180,7 @@ module.exports =
                 View = require(fp) # Get the View module
                 view = new View() # Create new View
                 # Check if it is an instance of a Space-pen View
-                if view instanceof $
+                if view instanceof View
                   # Is Space-pen view
                   cb(null, view)
                 else

@@ -1,6 +1,6 @@
 {Emitter, Disposable, CompositeDisposable, TextEditor} = require 'atom'
-{$, $$, $$$, ScrollView, TextEditorView} = require 'atom-space-pen-views'
-
+{ScrollView, TextEditorView} = require 'atom-space-pen-views'
+{$, $$, $$$, View} = require 'atom'
 util = require 'util'
 path = require 'path'
 _ = require 'underscore-plus'
@@ -172,7 +172,6 @@ class PreviewView extends HTMLElement
       @messageView.detach()
 
   renderViewForPreview: (view) =>
-    console.log('renderViewForPreview', view, @htmlPreviewContainer)
     @editorContents.hide()
     @htmlPreviewContainer.show()
     @htmlPreviewContainer.html view
@@ -181,10 +180,10 @@ class PreviewView extends HTMLElement
     @editorContents.show()
 
   getTitle: ->
-    if @getEditor()?
-      "#{@getEditor().getTitle()} preview"
-    else
-      "Preview"
+    # if @getEditor()?
+    #   "#{@getEditor().getTitle()} preview"
+    # else
+      "Atom Preview"
 
   getEditor: ->
     @textEditor.getModel()
@@ -263,8 +262,8 @@ class PreviewView extends HTMLElement
           editor.setScrollTop(spos)
           @hideViewPreview()
           focusOnEditor()
-        # Check if result is a Space-pen View (jQuery)
-        else if result instanceof $
+        # Check if result is a SpacePen View (jQuery)
+        else if result instanceof View
           # Is SpacePen View
           @renderViewForPreview(result)
           focusOnEditor()
@@ -272,6 +271,7 @@ class PreviewView extends HTMLElement
           # Unknown result type
           @hideViewPreview() # Show Editor by default
           focusOnEditor()
+          console.log('unsupported result', result)
           return @showError new Error("Unsupported result type.")
 
       # Start preview processing

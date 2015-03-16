@@ -17,7 +17,10 @@ class SelectRendererView extends SelectListView
     # console.log("#{item} was selected")
     @previewView.renderPreviewWithRenderer item
     # Close
-    @detach()
+    try
+        @detach()
+    catch e
+
 
   attach: =>
     # @previewView.editorContents.append @
