@@ -92,7 +92,7 @@ module.exports =
       exts: /\.(less)$/i
     'Jade':
       render: (text, filepath, cb) ->
-        jade = require 'jade'
+        jade = allowUnsafeNewFunction -> allowUnsafeEval -> require 'jade'
         options = {
           pretty: true
         }
