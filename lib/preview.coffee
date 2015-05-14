@@ -2,10 +2,16 @@ url = require 'url'
 PreviewView = require './preview-view'
 
 module.exports =
-  configDefaults:
-    updateOnTabChange: true
-    refreshDebouncePeriod: 100
-    liveUpdate: true
+  config:
+    updateOnTabChange:
+      type: 'boolean'
+      default: true
+    refreshDebouncePeriod:
+      type: 'integer'
+      default: 100
+    liveUpdate:
+      type: 'boolean'
+      default: true
 
   previewView: null
   uri: "atom://atom-preview"
