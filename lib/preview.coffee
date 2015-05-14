@@ -68,7 +68,7 @@ module.exports =
       return
 
   toggle: ->
-    editor = atom.workspace.getActiveEditor()
+    editor = atom.workspace.getActiveTextEditor()
     return unless editor?
     previewPane = atom.workspace.paneForURI(@uri)
     if previewPane
