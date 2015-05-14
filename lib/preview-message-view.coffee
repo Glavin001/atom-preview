@@ -1,6 +1,5 @@
-{View} = require 'atom'
-module.exports =
-class PreviewMessageView extends View
+{View} = require 'atom-space-pen-views'
+module.exports = class PreviewMessageView extends View
   @content: ->
     @div =>
       @div

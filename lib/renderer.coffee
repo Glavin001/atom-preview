@@ -1,4 +1,4 @@
-{$, View} = require 'atom'
+{$, View} = require 'atom-space-pen-views'
 path = require 'path'
 temp = require("temp").track()
 fs = require 'fs'

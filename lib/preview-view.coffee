@@ -1,6 +1,5 @@
 {Emitter, Disposable, CompositeDisposable, TextEditor} = require 'atom'
-{ScrollView, TextEditorView} = require 'atom-space-pen-views'
-{$, $$, $$$, View} = require 'atom'
+{$, $$, $$$, View, ScrollView, TextEditorView} = require 'atom-space-pen-views'
 util = require 'util'
 path = require 'path'
 _ = require 'underscore-plus'
