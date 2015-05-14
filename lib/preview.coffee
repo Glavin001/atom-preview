@@ -2,10 +2,16 @@ url = require 'url'
 PreviewView = require './preview-view'
 
 module.exports =
-  configDefaults:
-    updateOnTabChange: true
-    refreshDebouncePeriod: 100
-    liveUpdate: true
+  config:
+    updateOnTabChange:
+      type: 'boolean'
+      default: true
+    refreshDebouncePeriod:
+      type: 'integer'
+      default: 100
+    liveUpdate:
+      type: 'boolean'
+      default: true
 
   previewView: null
   uri: "atom://atom-preview"
@@ -20,12 +26,12 @@ module.exports =
     # console.log 'activate(state)'
     # console.log state
 
-    atom.workspaceView.command 'preview:toggle', =>
-      @toggle()
-    atom.workspaceView.command 'preview:toggle-options', =>
-      @toggleOptions()
-    atom.workspaceView.command 'preview:select-renderer', =>
-      @selectRenderer()
+    atom.commands.add 'atom-workspace',
+      'preview:toggle': => @toggle()
+    atom.commands.add 'atom-workspace',
+      'preview:toggle-options': => @toggleOptions()
+    atom.commands.add 'atom-workspace',
+      'preview:select-renderer': => @selectRenderer()
 
     atom.workspace.addOpener (uriToOpen) =>
       return unless uriToOpen is @uri
@@ -43,7 +49,7 @@ module.exports =
   ###
   serialize: ->
     # console.log 'serialize()'
-    previewPane = atom.workspace.paneForUri(@uri)
+    previewPane = atom.workspace.paneForURI(@uri)
     return {
       isOpen: previewPane?
     }
@@ -56,15 +62,15 @@ module.exports =
   ###
   deactivate: ->
     # console.log 'deactivate()'
-    previewPane = atom.workspace.paneForUri(@uri)
+    previewPane = atom.workspace.paneForURI(@uri)
     if previewPane
       previewPane.destroyItem(previewPane.itemForUri(@uri))
       return
 
   toggle: ->
-    editor = atom.workspace.getActiveEditor()
+    editor = atom.workspace.getActiveTextEditor()
     return unless editor?
-    previewPane = atom.workspace.paneForUri(@uri)
+    previewPane = atom.workspace.paneForURI(@uri)
     if previewPane
       previewPane.destroyItem(previewPane.itemForUri(@uri))
       return

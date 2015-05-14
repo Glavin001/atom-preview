@@ -1,4 +1,4 @@
-{SelectListView} = require 'atom'
+{SelectListView} = require 'atom-space-pen-views'
 renderers = require './renderer'
 
 module.exports =
@@ -18,14 +18,12 @@ class SelectRendererView extends SelectListView
     @previewView.renderPreviewWithRenderer item
     # Close
     try
-        @detach()
+      @detach()
     catch e
 
-
   attach: =>
-    # @previewView.editorContents.append @
-    # @previewView.hideMessage()
-    atom.workspaceView.appendToTop @
+    atom.workspace.addTopPanel({item: @})
+
   toggle: =>
     if @hasParent()
       @detach()

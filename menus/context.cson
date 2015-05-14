@@ -3,7 +3,8 @@
 ###
 
 'context-menu':
-  '.workspace .editor:not(.mini)':
-    'Toggle Preview': 'preview:toggle'
-    'Toggle Preview Options': 'preview:toggle-options'
-    'Select Preview Renderer': 'preview:select-renderer'
+  'atom-text-editor': [
+    {label: 'Toggle Preview', command: 'preview:toggle'}
+    {label: 'Toggle Preview Options', command: 'preview:toggle-options'}
+    {label: 'Select Preview Renderer', command: 'preview:select-renderer'}
+  ]

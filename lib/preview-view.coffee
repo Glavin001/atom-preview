@@ -1,6 +1,5 @@
 {Emitter, Disposable, CompositeDisposable, TextEditor} = require 'atom'
-{ScrollView, TextEditorView} = require 'atom-space-pen-views'
-{$, $$, $$$, View} = require 'atom'
+{$, $$, $$$, View, ScrollView, TextEditorView} = require 'atom-space-pen-views'
 util = require 'util'
 path = require 'path'
 _ = require 'underscore-plus'
@@ -97,7 +96,7 @@ class PreviewView extends HTMLElement
       @emitter.on 'did-change-title', callback
 
   handleEvents: () ->
-    currEditor = atom.workspace.getActiveEditor()
+    currEditor = atom.workspace.getActiveTextEditor()
     if currEditor?
       @disposables.add currEditor.getBuffer().onDidStopChanging =>
         @changeHandler() if atom.config.get 'preview.liveUpdate'
@@ -112,7 +111,7 @@ class PreviewView extends HTMLElement
     updateOnTabChange =
       atom.config.get 'preview.updateOnTabChange'
     if updateOnTabChange
-      currEditor = atom.workspace.getActiveEditor()
+      currEditor = atom.workspace.getActiveTextEditor()
       if currEditor?
         # Stop watching for events on current Editor
         @disposables.dispose()
@@ -192,7 +191,7 @@ class PreviewView extends HTMLElement
     if @getEditor()?
       @getEditor().getPath()
 
-  getUri: ->
+  getURI: ->
     "atom://atom-preview"
 
   focus: ->
@@ -211,7 +210,7 @@ class PreviewView extends HTMLElement
     # Update Title
     @emitter.emit 'did-change-title'
     # Start preview processing
-    cEditor = atom.workspace.getActiveEditor()
+    cEditor = atom.workspace.getActiveTextEditor()
     editor = @getEditor()
     # console.log('renderPreviewWithRenderer', rendererName)
     # console.log('editor', editor, cEditor)
@@ -255,7 +254,7 @@ class PreviewView extends HTMLElement
         # Check if result is a string and therefore source code
         if typeof result is "string"
           outLang = renderer.lang()
-          grammar = atom.syntax.selectGrammar("source.#{outLang}", result)
+          grammar = atom.grammars.selectGrammar("source.#{outLang}", result)
           editor.setGrammar grammar
           editor.setText result
           # Restore Preview's Scroll Positon
