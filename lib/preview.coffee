@@ -49,7 +49,7 @@ module.exports =
   ###
   serialize: ->
     # console.log 'serialize()'
-    previewPane = atom.workspace.paneForUri(@uri)
+    previewPane = atom.workspace.paneForURI(@uri)
     return {
       isOpen: previewPane?
     }
@@ -62,7 +62,7 @@ module.exports =
   ###
   deactivate: ->
     # console.log 'deactivate()'
-    previewPane = atom.workspace.paneForUri(@uri)
+    previewPane = atom.workspace.paneForURI(@uri)
     if previewPane
       previewPane.destroyItem(previewPane.itemForUri(@uri))
       return
@@ -70,7 +70,7 @@ module.exports =
   toggle: ->
     editor = atom.workspace.getActiveEditor()
     return unless editor?
-    previewPane = atom.workspace.paneForUri(@uri)
+    previewPane = atom.workspace.paneForURI(@uri)
     if previewPane
       previewPane.destroyItem(previewPane.itemForUri(@uri))
       return

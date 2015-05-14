@@ -191,7 +191,7 @@ class PreviewView extends HTMLElement
     if @getEditor()?
       @getEditor().getPath()
 
-  getUri: ->
+  getURI: ->
     "atom://atom-preview"
 
   focus: ->
