@@ -254,7 +254,7 @@ class PreviewView extends HTMLElement
         # Check if result is a string and therefore source code
         if typeof result is "string"
           outLang = renderer.lang()
-          grammar = atom.syntax.selectGrammar("source.#{outLang}", result)
+          grammar = atom.grammars.selectGrammar("source.#{outLang}", result)
           editor.setGrammar grammar
           editor.setText result
           # Restore Preview's Scroll Positon
