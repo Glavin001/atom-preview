@@ -20,12 +20,12 @@ module.exports =
     # console.log 'activate(state)'
     # console.log state
 
-    atom.workspaceView.command 'preview:toggle', =>
-      @toggle()
-    atom.workspaceView.command 'preview:toggle-options', =>
-      @toggleOptions()
-    atom.workspaceView.command 'preview:select-renderer', =>
-      @selectRenderer()
+    atom.commands.add 'atom-workspace',
+      'preview:toggle': => @toggle()
+    atom.commands.add 'atom-workspace',
+      'preview:toggle-options': => @toggleOptions()
+    atom.commands.add 'atom-workspace',
+      'preview:select-renderer': => @selectRenderer()
 
     atom.workspace.addOpener (uriToOpen) =>
       return unless uriToOpen is @uri
