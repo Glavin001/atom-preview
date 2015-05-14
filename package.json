@@ -31,9 +31,9 @@
   "scripts": {
     "test": "grunt"
   },
-  "activationEvents": [
-    "preview:toggle"
-  ],
+  "activationCommands": {
+    "atom-text-editor": "preview:toggle"
+  },
   "dependencies": {
     "LiveScript": "^1.2.0",
     "analytics-node": "^1.0.2",
