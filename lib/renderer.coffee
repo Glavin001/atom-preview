@@ -137,6 +137,15 @@ module.exports =
         cb null, result
       exts: /\.(jsx)$/i
       lang: -> 'js'
+    'Babel ES6 JavaScript':
+      # ES6 with Babel.js
+      render: (text, filepath, cb) ->
+        babel = require 'babel-core'
+        options = {}
+        result = babel.transform(text, options)
+        cb null, result.code
+      exts: /\.(js|es6|es)$/i
+      lang: -> 'js'
     'EmberScript':
       render: (text, filepath, cb) ->
         em = require 'ember-script'
