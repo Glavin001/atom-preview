@@ -64,7 +64,7 @@ module.exports =
     # console.log 'deactivate()'
     previewPane = atom.workspace.paneForURI(@uri)
     if previewPane
-      previewPane.destroyItem(previewPane.itemForUri(@uri))
+      previewPane.destroyItem(previewPane.itemForURI(@uri))
       return
 
   toggle: ->
@@ -72,7 +72,7 @@ module.exports =
     return unless editor?
     previewPane = atom.workspace.paneForURI(@uri)
     if previewPane
-      previewPane.destroyItem(previewPane.itemForUri(@uri))
+      previewPane.destroyItem(previewPane.itemForURI(@uri))
       return
     previousActivePane = atom.workspace.getActivePane()
     atom.workspace.open(@uri, split: 'right', searchAllPanes: true)
