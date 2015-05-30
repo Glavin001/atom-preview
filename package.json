@@ -40,6 +40,7 @@
     "atom-space-pen-views": "^2.0.4",
     "babel-core": "^5.4.7",
     "clear-require": "^1.0.1",
+    "coffee-react": "^3.2.0",
     "coffee-script": "^1.7.1",
     "dogeon": "^1.0.0",
     "dogescript": "^2.3.0",
