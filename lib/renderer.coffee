@@ -94,6 +94,7 @@ module.exports =
       render: (text, filepath, cb) ->
         jade = allowUnsafeNewFunction -> allowUnsafeEval -> require 'jade'
         options = {
+          filename: filepath
           pretty: true
         }
         fn = allowUnsafeNewFunction -> allowUnsafeEval -> jade.compile text, options
