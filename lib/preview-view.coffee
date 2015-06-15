@@ -46,7 +46,6 @@ class PreviewView extends HTMLElement
     @editorContents = $(@textEditor)
 
     # Add Text Editor
-    # Placeholder = Please type in a Text Editor to render preview
     @appendChild(@textEditor)
 
     # Create container for Previewing Rendered HTML
@@ -223,7 +222,7 @@ class PreviewView extends HTMLElement
       cEditor = @lastEditor
     if not cEditor?
       # cEditor not defined
-      @showError({message:"Please type a Text Editor to render preview"})
+      @showError({message:"Please select your Text Editor view to render a preview of your code"})
     else
       # Source Code text
       text = cEditor.getText()
