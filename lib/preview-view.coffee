@@ -223,7 +223,7 @@ class PreviewView extends HTMLElement
       cEditor = @lastEditor
     if not cEditor?
       # cEditor not defined
-      @showError({message:"Please type a Text Editor to render preview"})
+      @showError({message:"Please type in a Text Editor to render preview"})
     else
       # Source Code text
       text = cEditor.getText()
