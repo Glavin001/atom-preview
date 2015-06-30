@@ -127,7 +127,14 @@ class PreviewView extends HTMLElement
 
   showError: (result) ->
     # console.log('showError', result)
-    failureMessage = result?.message
+    failureMessage = if result and result.message 
+      '<div class="text-error preview-text-error">' + result.message.replace(/\n/g, '<br/>') + '</div>' 
+    else 
+      ""
+    stackDump = if result and result.stack 
+      '<div class="text-warning preview-text-warning">' + result.stack.replace(/\n/g, '<br/>') + '</div>' 
+    else 
+      ""
     @showMessage()
     @messageView.message.html $$$ ->
       @div
@@ -137,15 +144,10 @@ class PreviewView extends HTMLElement
           @span
             class: 'loading loading-spinner-large inline-block'
           @div
-            class: 'text-highlight',
+            class: 'text-highlight preview-text-highlight',
             'Previewing Failed\u2026'
-            =>
-              @div
-                class: 'text-error'
-                failureMessage if failureMessage?
-          @div
-            class: 'text-warning'
-            result?.stack
+          @raw failureMessage if failureMessage?
+          @raw stackDump if stackDump?
 
   showLoading: ->
     @showMessage()
@@ -157,7 +159,7 @@ class PreviewView extends HTMLElement
           @span
             class: 'loading loading-spinner-large inline-block'
           @div
-            class: 'text-highlight',
+            class: 'text-highlight preview-text-highlight',
             'Loading Preview\u2026'
 
   showMessage: ->
