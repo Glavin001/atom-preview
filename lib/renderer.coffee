@@ -56,6 +56,13 @@ module.exports =
         cb null, result
       exts: /\.(litcoffee)$/i
       lang: -> 'js'
+    'CoffeeScript (JSX)':
+      render: (text, filepath, cb) ->
+        react = require 'coffee-react'
+        result = react.compile text
+        cb null, result
+      exts: /\.(cjsx)$/i
+      lang: -> 'js'
     'CoffeeScript (CJSX)':
       render: (text, filepath, cb) ->
         react = require 'coffee-react'
