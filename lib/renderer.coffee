@@ -249,3 +249,13 @@ module.exports =
         cb null, result
       exts: /\.(coffee)$/i
       lang: -> 'js'
+    'YAML':
+      render: (text, filepath, cb) ->
+        jsyaml = require 'js-yaml'
+        try
+          json = jsyaml.safeLoad text
+          return cb null, JSON.stringify json, null, 2
+        catch e
+          return cb null, e.message
+      exts: /\.(yaml)$/i
+      lang: -> 'json'
