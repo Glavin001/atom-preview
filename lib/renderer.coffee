@@ -144,22 +144,16 @@ module.exports =
           cb err, css
       exts: /\.(styl)$/i
       lang: -> 'css'
-    'JavaScript (JSX)':
-      render: (text, filepath, cb) ->
-        reactTools = require 'react-tools'
-        options = {}
-        result = reactTools.transform text, options
-        cb null, result
-      exts: /\.(jsx)$/i
-      lang: -> 'js'
     'Babel ES6 JavaScript':
       # ES6 with Babel.js
       render: (text, filepath, cb) ->
         babel = require 'babel-core'
-        options = {}
+        options = {
+          stage: 0
+        }
         result = babel.transform(text, options)
         cb null, result.code
-      exts: /\.(js|es6|es)$/i
+      exts: /\.(js|jsx|es6|es)$/i
       lang: -> 'js'
     'EmberScript':
       render: (text, filepath, cb) ->
