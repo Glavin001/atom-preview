@@ -12,6 +12,9 @@ module.exports =
     liveUpdate:
       type: 'boolean'
       default: true
+    environmentVariablePath:
+      type: 'string'
+      default: ''
 
   previewView: null
   uri: "atom://atom-preview"

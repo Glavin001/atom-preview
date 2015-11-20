@@ -127,13 +127,13 @@ class PreviewView extends HTMLElement
 
   showError: (result) ->
     # console.log('showError', result)
-    failureMessage = if result and result.message 
-      '<div class="text-error preview-text-error">' + result.message.replace(/\n/g, '<br/>') + '</div>' 
-    else 
+    failureMessage = if result and result.message
+      '<div class="text-error preview-text-error">' + result.message.replace(/\n/g, '<br/>') + '</div>'
+    else
       ""
-    stackDump = if result and result.stack 
-      '<div class="text-warning preview-text-warning">' + result.stack.replace(/\n/g, '<br/>') + '</div>' 
-    else 
+    stackDump = if result and result.stack
+      '<div class="text-warning preview-text-warning">' + result.stack.replace(/\n/g, '<br/>') + '</div>'
+    else
       ""
     @showMessage()
     @messageView.message.html $$$ ->
@@ -323,7 +323,14 @@ class PreviewView extends HTMLElement
               label: "#{grammar}|#{extension}"
               category: version
           }
-          return renderer.render text, filePath, callback
+          p = atom.config.get('preview.environmentVariablePath')
+          c = process.env.PATH
+          if p
+            process.env.PATH = p
+          r = renderer.render text, filePath, (e,r) ->
+            process.env.PATH = c
+            callback(e,r)
+          return r
         else
           # Track
           @analytics.track {

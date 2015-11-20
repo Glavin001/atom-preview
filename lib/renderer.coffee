@@ -253,3 +253,59 @@ module.exports =
           return cb null, e.message
       exts: /\.(yaml)$/i
       lang: -> 'json'
+    'Latex':
+      render: (text, filepath, cb) ->
+        # Render LaTeX to PDF
+        latex = require("latex")
+        streamToString = (stream, cb) ->
+          chunks = []
+          stream.on('data', (chunk) =>
+            chunks.push(chunk)
+          )
+          stream.on('end', () =>
+            cb(chunks.join(''))
+          )
+        # console.log(process.env.PATH);
+        # dirpath = path.dirname(filepath)
+        streamToString(latex(text, {
+          # dirpath: dirpath
+          env: process.env
+        }), (pdfData) =>
+          console.log(pdfData)
+          pdfData = new Uint8Array(pdfData)
+          # Render PDF to HTML
+          require './../node_modules/pdfjs-dist/build/pdf.js'
+          PDFJS.workerSrc = "file://" + path.resolve(__dirname, "../node_modules/pdfjs-dist/build/pdf.worker.js")
+          # class PDFView extends View
+          #   constructor: (@pdfDocument) ->
+          #   @content: ->
+          #     @div =>
+          #       @canvas
+
+          PDFJS.getDocument({
+            data: pdfData
+          })
+          .then((pdf) ->
+            # Fetch the first page
+            pdf.getPage(1)
+            .then((page) ->
+              scale = 1.0
+              viewport = page.getViewport(scale)
+              # Prepare canvas using PDF page dimensions
+              canvas = document.createElement('canvas')
+              context = canvas.getContext('2d')
+              canvas.height = viewport.height
+              canvas.width = viewport.width
+              # Render PDF page into canvas context
+              renderContext =
+                canvasContext: context
+                viewport: viewport
+              page.render renderContext
+
+              # v = new PDFView(pdf)
+              return cb(null, canvas)
+            )
+          )
+        )
+      exts: /\.(tex)$/i
+
