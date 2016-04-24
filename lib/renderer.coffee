@@ -112,6 +112,19 @@ module.exports =
         cb null, result
       lang: -> 'html'
       exts: /\.(jade)$/i
+    'Pug':
+      render: (text, filepath, cb) ->
+        pug = allowUnsafeNewFunction -> allowUnsafeEval -> require 'pug'
+        options = {
+          filename: filepath
+          pretty: true
+        }
+        fn = allowUnsafeNewFunction -> allowUnsafeEval ->
+          pug.compile text, options
+        result = allowUnsafeNewFunction -> allowUnsafeEval -> fn()
+        cb null, result
+      lang: -> 'html'
+      exts: /\.(pug)$/i
     'Dogescript':
       render: (text, filepath, cb) ->
         dogescript = require "dogescript"
