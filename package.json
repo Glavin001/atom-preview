@@ -57,6 +57,7 @@
     "loophole": "^1.0.0",
     "ng-classify": "^4.0.2",
     "node-uuid": "^1.4.7",
+    "pug": "^2.0.0-alpha6",
     "stylus": "^0.54.2",
     "temp": "^0.8.1",
     "typestring": "^1.7.5",
@@ -67,7 +68,7 @@
     "grunt-coffeelint": "0.0.8",
     "grunt-contrib-watch": "~0.5.3",
     "grunt-lesslint": "~1.0.0",
-    "grunt-apm": "0.0.1"
+    "grunt-apm": "1.0.1"
   },
   "keywords": [
     "preview",
