@@ -84,23 +84,18 @@ module.exports =
         resourcePath = atom.themes.resourcePath;
         # Atom UI Variables is under `./static/variables/`
         atomVariablesPath = path.resolve resourcePath, 'static', 'variables'
-        parser = new(less.Parser) ({
+        options = {
           paths: [ # Specify search paths for @import directives
-            '.',
+            '.'
             atomVariablesPath
-            ],
-          filename: filepath # Specify a filename, for better error messages
-        } )
-        parser.parse(text, (e, tree) ->
-          # console.log e, tree
-          if e?
-            return cb e, null
-          else
-            output = tree.toCSS({
-              # Do Not Minify CSS output
-              compress: false
-            } )
-            cb null, output
+          ]
+        }
+        less.render(text,options)
+        .then((output) ->
+          cb(null,output.css)
+        )
+        .catch((error) ->
+          cb(error)
         )
       lang: -> 'css'
       exts: /\.(less)$/i
@@ -111,7 +106,8 @@ module.exports =
           filename: filepath
           pretty: true
         }
-        fn = allowUnsafeNewFunction -> allowUnsafeEval -> jade.compile text, options
+        fn = allowUnsafeNewFunction -> allowUnsafeEval ->
+          jade.compile text, options
         result = allowUnsafeNewFunction -> allowUnsafeEval -> fn()
         cb null, result
       lang: -> 'html'
@@ -148,9 +144,7 @@ module.exports =
       # ES6 with Babel.js
       render: (text, filepath, cb) ->
         babel = require 'babel-core'
-        options = {
-          stage: 0
-        }
+        options = {}
         result = babel.transform(text, options)
         cb null, result.code
       exts: /\.(js|jsx|es6|es)$/i
