@@ -144,7 +144,15 @@ module.exports =
       # ES6 with Babel.js
       render: (text, filepath, cb) ->
         babel = require 'babel-core'
-        options = {}
+        options =
+          presets: [
+            require 'babel-preset-es2015'
+            require 'babel-preset-react'
+            require 'babel-preset-stage-0'
+            require 'babel-preset-stage-1'
+            require 'babel-preset-stage-2'
+            require 'babel-preset-stage-3'
+          ]
         result = babel.transform(text, options)
         cb null, result.code
       exts: /\.(js|jsx|es6|es)$/i
