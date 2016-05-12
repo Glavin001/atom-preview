@@ -35,7 +35,6 @@
     "atom-text-editor": "preview:toggle"
   },
   "dependencies": {
-    "LiveScript": "^1.2.0",
     "analytics-node": "^2.1.0",
     "atom-space-pen-views": "^2.2.0",
     "babel-core": "^6.7.7",
@@ -54,6 +53,7 @@
     "jade": "^1.4.2",
     "js-yaml": "^3.6.0",
     "less": "^2.6.1",
+    "livescript": "^1.4.0",
     "loophole": "^1.0.0",
     "ng-classify": "^4.0.2",
     "node-uuid": "^1.4.7",

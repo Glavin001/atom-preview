@@ -233,12 +233,12 @@ module.exports =
       exts: /\.(coffee|js)$/i
     'LiveScript':
       render: (text, filepath, cb) ->
-        LiveScript = require 'LiveScript'
+        livescript = require 'livescript'
         options = {
           filename: filepath
           bare: true
         }
-        result = allowUnsafeNewFunction -> LiveScript.compile text, options
+        result = allowUnsafeNewFunction -> livescript.compile text, options
         cb null, result
       exts: /\.(ls)$/i
       lang: -> 'js'
