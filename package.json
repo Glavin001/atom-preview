@@ -46,7 +46,7 @@
     "babel-preset-stage-3": "^6.5.0",
     "clear-require": "^1.0.1",
     "coffee-react": "^5.0.0",
-    "coffee-script": "^1.7.1",
+    "coffee-script": "^1.10.0",
     "dogeon": "^1.0.0",
     "dogescript": "^2.3.0",
     "ember-script": "0.0.14",
