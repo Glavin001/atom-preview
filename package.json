@@ -60,7 +60,7 @@
     "pug": "^2.0.0-alpha6",
     "stylus": "^0.54.2",
     "temp": "^0.8.1",
-    "typestring": "^1.7.5",
+    "typescript": "^2.0.3",
     "underscore-plus": "^1.5.0"
   },
   "devDependencies": {

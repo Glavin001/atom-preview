@@ -72,11 +72,27 @@ module.exports =
       lang: -> 'js'
     'TypeScript':
       render: (text, filepath, cb) ->
-        ts = allowUnsafeNewFunction -> allowUnsafeEval -> require 'typestring'
-        result = allowUnsafeEval -> ts.compile(text)
-        cb null, result
+        ts = allowUnsafeNewFunction -> allowUnsafeEval -> require 'typescript'
+        result = allowUnsafeEval -> ts.transpileModule(
+          text,
+          compilerOptions:
+            module: ts.ModuleKind.CommonJS
+        )
+        cb null, result.outputText
       lang: -> 'js'
       exts: /\.(ts)$/i
+    'TypeScriptReact':
+      render: (text, filepath, cb) ->
+        ts = allowUnsafeNewFunction -> allowUnsafeEval -> require 'typescript'
+        result = allowUnsafeEval -> ts.transpileModule(
+          text,
+          compilerOptions:
+            module: ts.ModuleKind.CommonJS
+            jsx: 'React'
+        )
+        cb null, result.outputText
+      lang: -> 'js'
+      exts: /\.(tsx)$/i
     'LESS':
       render: (text, filepath, cb) ->
         less = require 'less'
