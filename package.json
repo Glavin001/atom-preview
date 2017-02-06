@@ -50,6 +50,7 @@
     "dogeon": "^1.0.0",
     "dogescript": "^2.3.0",
     "ember-script": "0.0.14",
+    "handlebars": "^4.0.6",
     "jade": "^1.4.2",
     "js-yaml": "^3.6.0",
     "less": "^2.6.1",

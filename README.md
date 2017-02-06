@@ -31,6 +31,7 @@ Or Settings/Preferences ➔ Packages ➔ Search for `preview`
 - [x] [Literate CoffeeScript](https://github.com/Glavin001/atom-preview/pull/18)
 - [x] [LESS](https://github.com/Glavin001/atom-preview/issues/2)
 - [x] [Jade](https://github.com/Glavin001/atom-preview/issues/8)
+- [x] [Handlebars](https://github.com/Glavin001/atom-preview/issues/35)
 - [x] [DogeScript](https://github.com/Glavin001/atom-preview/issues/12)
 - [x] [TypeScript](https://github.com/Glavin001/atom-preview/issues/5)
 - [x] [Stylus](https://github.com/Glavin001/atom-preview/issues/21)
