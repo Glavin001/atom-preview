@@ -61,7 +61,8 @@
     "stylus": "^0.54.2",
     "temp": "^0.8.1",
     "typescript": "^2.0.3",
-    "underscore-plus": "^1.5.0"
+    "underscore-plus": "^1.5.0",
+    "tmp": "^0.0.31"
   },
   "devDependencies": {
     "grunt": "~0.4.2",

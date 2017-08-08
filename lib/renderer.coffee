@@ -284,3 +284,27 @@ module.exports =
           return cb null, e.message
       exts: /\.(yaml)$/i
       lang: -> 'json'
+    'glsl':
+      render: (text, filepath, cb) ->
+        try
+          # glslangValidator needs file not text, so we create temp file.
+          # extension must be the same, so validator can detect shader type.
+          tmp = require 'tmp'
+          extension = '.' + filepath.split('.').pop();
+          tempFile = tmp.fileSync {prefix: 'atom-preview-editor', postfix: extension};
+          file = fs.writeFileSync tempFile.fd, text
+
+          child_process = require 'child_process'
+          validator = atom.config.get 'preview.glslangValidator'
+          param = '-E'
+          child_process.execFile validator, [param, tempFile.name], (error, stdout, stderr) ->
+            tempFile.removeCallback()
+            return cb(error, null) if error
+            preprocessedGlsl = stdout
+            if atom.config.get 'preview.removeExtraBlankLines'
+              preprocessedGlsl = preprocessedGlsl.replace /\n\n\n+/g, '\n\n'
+            cb(null, preprocessedGlsl)
+        catch e
+          return cb null, e.message
+      exts: /\.(vert|tesc|tese|geom|frag|comp)$/i
+      lang: -> 'glsl'
