@@ -76,7 +76,7 @@ module.exports =
       return
     previousActivePane = atom.workspace.getActivePane()
     atom.workspace.open(@uri, split: 'right', searchAllPanes: true)
-    .done (previewView) =>
+    .then (previewView) =>
     #   console.log("previewView", previewView, @previewView)
       if previewView instanceof PreviewView
           previewView.initialize()
