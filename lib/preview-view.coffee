@@ -127,13 +127,13 @@ class PreviewView extends HTMLElement
 
   showError: (result) ->
     # console.log('showError', result)
-    failureMessage = if result and result.message 
-      '<div class="text-error preview-text-error">' + result.message.replace(/\n/g, '<br/>') + '</div>' 
-    else 
+    failureMessage = if result and result.message
+      '<div class="text-error preview-text-error">' + result.message.replace(/\n/g, '<br/>') + '</div>'
+    else
       ""
-    stackDump = if result and result.stack 
-      '<div class="text-warning preview-text-warning">' + result.stack.replace(/\n/g, '<br/>') + '</div>' 
-    else 
+    stackDump = if result and result.stack
+      '<div class="text-warning preview-text-warning">' + result.stack.replace(/\n/g, '<br/>') + '</div>'
+    else
       ""
     @showMessage()
     @messageView.message.html $$$ ->
@@ -229,7 +229,7 @@ class PreviewView extends HTMLElement
       # Source Code text
       text = cEditor.getText()
       # Save Preview's Scroll position
-      spos = editor.getScrollTop()
+      spos = editor.element.getScrollTop()
       # console.log(text)
       # console.log(cEditor is editor, cEditor, editor)
       @showLoading()
@@ -259,7 +259,7 @@ class PreviewView extends HTMLElement
           editor.setGrammar grammar
           editor.setText result
           # Restore Preview's Scroll Positon
-          editor.setScrollTop(spos)
+          editor.element.setScrollTop(spos)
           @hideViewPreview()
           focusOnEditor()
         # Check if result is a SpacePen View (jQuery)

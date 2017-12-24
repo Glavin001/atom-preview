@@ -2,6 +2,7 @@
 path = require 'path'
 temp = require("temp").track()
 fs = require 'fs'
+pwd = atom.packages.getActivePackage('tree-view').mainModule.provideTreeView().selectedPaths()[0].toString().replace(/(.*)\/(.*)/,"$1");
 {allowUnsafeEval, allowUnsafeNewFunction} = require 'loophole'
 _ = require 'underscore-plus'
 # Speed up repetitive requiring renderers
@@ -284,3 +285,10 @@ module.exports =
           return cb null, e.message
       exts: /\.(yaml)$/i
       lang: -> 'json'
+    'SASS':
+      render: (text, filepath, cb) ->
+        sass = require 'sass'
+        result = sass.renderSync {data: text,includePaths: [pwd]}
+        cb null, result.css.toString()
+      exts: /\.(s[ac]ss)$/i
+      lang: -> 'css'
