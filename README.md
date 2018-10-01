@@ -39,7 +39,7 @@ Or Settings/Preferences ➔ Packages ➔ Search for `preview`
 - [x] [EmberScript](https://github.com/Glavin001/atom-preview/issues/39)
 - [x] [ng-classify](https://github.com/Glavin001/atom-preview/issues/60)
 - [x] [LiveScript](https://github.com/Glavin001/atom-preview/issues/89)
-- [ ] [SASS](https://github.com/Glavin001/atom-preview/issues/3)
+- [x] [SASS/SCSS](https://github.com/Glavin001/atom-preview/issues/3)
 - [ ] [Markdown](https://github.com/Glavin001/atom-preview/issues/7)
 - [ ] [Haml](https://github.com/Glavin001/atom-preview/issues/9)
 - [ ] [ClojureScript](https://github.com/Glavin001/atom-preview/issues/15)

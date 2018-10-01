@@ -1,0 +1,19 @@
+@mixin box($color:black) {
+  color: $color;
+
+  .box {
+    @content;
+  }
+}
+
+#container {
+  background-color: white;
+
+  @include box(#E0FF00) {
+    text-align: center;
+  };
+
+  .theme--dark & {
+    background-color: black;
+  }
+}

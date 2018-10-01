@@ -284,3 +284,20 @@ module.exports =
           return cb null, e.message
       exts: /\.(yaml)$/i
       lang: -> 'json'
+    'SASS/SCSS':
+      render: (text, filepath, cb) ->
+        sass = require('node-sass')
+        sass.render(
+          {
+            file: filepath,
+            data: text,
+            outputStyle: 'expanded'
+          },
+          (error, result) ->
+            if error
+              cb null, error.message
+            else
+              cb null, String result.css
+        )
+      exts: /\.s[ac]ss$/i
+      lang: -> 'css'
