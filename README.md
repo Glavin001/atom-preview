@@ -54,10 +54,8 @@ For instance, if you type or switch tabs,
 how long of a pause before the preview refreshes.
 - `Update On Tab Change` (boolean) -
 Should the preview update to the currently active tab?
-- `glslangValidator` (string) - Path to [glslangValidator](https://www.khronos.org/opengles/sdk/tools/Reference-Compiler/) . Needed for [GLSL](https://en.wikipedia.org/wiki/OpenGL_Shading_Language) preview (pre-processed). You can compile it from [source](https://github.com/KhronosGroup/glslang) or download as part of [VulkanSDK](https://www.lunarg.com/vulkan-sdk/).
-- `Remove Extra Blank Lines` (boolean) - Remove extra blank lines in glsl preprocessed output.
-
-removeExtraBlankLines
+- `glslangValidator` (string) - Path to [glslangValidator](https://www.khronos.org/opengles/sdk/tools/Reference-Compiler/). Needed for [GLSL](https://en.wikipedia.org/wiki/OpenGL_Shading_Language) preview (pre-processed). You can compile it from [source](https://github.com/KhronosGroup/glslang) or download as part of [VulkanSDK](https://www.lunarg.com/vulkan-sdk/).
+- `Remove Extra Blank Lines` (boolean) - Remove extra blank lines in GLSL preprocessed output.
 
 ## Screenshots
 
