@@ -301,3 +301,41 @@ module.exports =
         )
       exts: /\.s[ac]ss$/i
       lang: -> 'css'
+    'glsl':
+      render: (text, filepath, cb) ->
+        try
+          # glslangValidator needs file not text, so we create temp file.
+          # extension must be the same, so validator can detect shader type.
+          tmp = require 'tmp'
+          extension = '.' + filepath.split('.').pop();
+          tmp.file {
+            prefix: 'atom-preview-editor'
+            postfix: extension
+            detachDescriptor: true # We close file manually, but library deletes it.
+          }, (error, path, fd, cleanupCallback) ->
+            return cb(error, null) if error
+
+            console.log('File: ', path);
+
+            fs.writeFile fd, text, (error) ->
+              return cb(error, null) if error
+
+              # We need to close the file, so preprocessor can open it.
+              fs.close fd, (error) ->
+                return cb(error, null) if error
+
+                child_process = require 'child_process'
+                validator = atom.config.get 'preview.glslangValidator'
+                param = '-E'
+                child_process.execFile validator, [param, path], (error, stdout, stderr) ->
+                  return cb(error, null) if error
+                  preprocessedGlsl = stdout
+                  if atom.config.get 'preview.removeExtraBlankLines'
+                    preprocessedGlsl = preprocessedGlsl.replace /^[\r\n]+([\r\n])/gm, '$1$1'
+                  cb(null, preprocessedGlsl)
+                  cleanupCallback # Delete tmp file.
+        catch e
+          console.log('Exception!!');
+          return cb null, e.message
+      exts: /\.(vert|tesc|tese|geom|frag|comp)$/i
+      lang: -> 'glsl'

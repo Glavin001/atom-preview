@@ -12,6 +12,12 @@ module.exports =
     liveUpdate:
       type: 'boolean'
       default: true
+    glslangValidator:
+      type: 'string'
+      default: 'glslangValidator'
+    removeExtraBlankLines:
+      type: 'boolean'
+      default: true
 
   previewView: null
   uri: "atom://atom-preview"
