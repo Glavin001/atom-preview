@@ -141,6 +141,15 @@ module.exports =
         cb null, result
       lang: -> 'html'
       exts: /\.(pug)$/i
+    'Handlebars':
+      render: (text, filepath, cb) ->
+        Handlebars = allowUnsafeNewFunction -> allowUnsafeEval -> require 'handlebars'
+        template = allowUnsafeNewFunction -> allowUnsafeEval ->
+          Handlebars.compile text
+        result = allowUnsafeNewFunction -> allowUnsafeEval -> template {}
+        cb null, result
+      lang: -> 'html'
+      exts: /\.(handlebars)$/i
     'Dogescript':
       render: (text, filepath, cb) ->
         dogescript = require "dogescript"
